@@ -9,7 +9,9 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- ENUMS
 -- ============================================================
 
+DROP TYPE IF EXISTS billing_cycle CASCADE;
 CREATE TYPE billing_cycle AS ENUM ('monthly', 'yearly', 'one_time');
+DROP TYPE IF EXISTS submission_status CASCADE;
 CREATE TYPE submission_status AS ENUM ('new', 'read', 'replied');
 
 -- ============================================================
@@ -185,6 +187,7 @@ CREATE TABLE IF NOT EXISTS contact_submissions (
   id         UUID              PRIMARY KEY DEFAULT uuid_generate_v4(),
   name       TEXT              NOT NULL,
   email      TEXT              NOT NULL,
+  phone      TEXT,
   company    TEXT,
   message    TEXT              NOT NULL,
   status     submission_status NOT NULL DEFAULT 'new',

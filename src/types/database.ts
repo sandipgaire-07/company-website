@@ -1,8 +1,3 @@
-// ============================================================
-// LeafClutch Technologies — Database Types
-// Auto-maintained to match supabase/migrations/001_initial_schema.sql
-// ============================================================
-
 export type Json =
   | string
   | number
@@ -11,203 +6,457 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-// ── Enums ────────────────────────────────────────────────────
-
-export type BillingCycle = 'monthly' | 'yearly' | 'one_time'
-export type SubmissionStatus = 'new' | 'read' | 'replied'
-
-// ── Row types (what you get back from SELECT) ────────────────
-
-export interface SiteContentRow {
-  id: string
-  section: string        // 'hero' | 'about' | 'achievement_story' | etc.
-  title: string | null
-  subtitle: string | null
-  description: string | null
-  badge_text: string | null
-  extra: Json | null     // flexible additional fields per section
-  updated_at: string
-}
-
-export interface ProductRow {
-  id: string
-  name: string
-  slug: string
-  description: string | null
-  icon: string | null    // Lucide icon name
-  category: string | null
-  is_active: boolean
-  is_featured: boolean
-  sort_order: number
-  created_at: string
-  updated_at: string
-}
-
-export interface ProductPriceRow {
-  id: string
-  product_id: string
-  plan_name: string       // e.g. 'Starter', 'Professional', 'Enterprise'
-  billing_cycle: BillingCycle
-  price: number           // in NPR (or your chosen currency)
-  currency: string        // 'NPR' | 'USD' etc.
-  is_highlighted: boolean // show as recommended / most popular
-  sort_order: number
-  created_at: string
-  updated_at: string
-}
-
-export interface ProductVariationRow {
-  id: string
-  product_price_id: string
-  feature: string         // e.g. 'Up to 5 users'
-  is_included: boolean    // true = ✓, false = ✗ (shown greyed out)
-  sort_order: number
-}
-
-export interface CompanyRow {
-  id: string
-  name: string
-  logo_url: string
-  website_url: string | null
-  is_active: boolean
-  sort_order: number
-  created_at: string
-}
-
-export interface AchievementRow {
-  id: string
-  value: string           // '1.5+', '99%', etc.
-  title: string
-  description: string | null
-  icon: string | null     // Lucide icon name
-  sort_order: number
-}
-
-export interface ServiceRow {
-  id: string
-  title: string
-  description: string | null
-  icon: string | null
-  is_active: boolean
-  sort_order: number
-}
-
-export interface TeamMemberRow {
-  id: string
-  name: string
-  role: string
-  bio: string | null
-  avatar_url: string | null
-  linkedin_url: string | null
-  sort_order: number
-  is_active: boolean
-}
-
-export interface TestimonialRow {
-  id: string
-  author_name: string
-  author_company: string | null
-  author_role: string | null
-  avatar_url: string | null
-  content: string
-  rating: number
-  is_active: boolean
-  sort_order: number
-}
-
-export interface ContactSubmissionRow {
-  id: string
-  name: string
-  email: string
-  company: string | null
-  message: string
-  status: SubmissionStatus
-  created_at: string
-}
-
-// ── Insert types (what you send in INSERT) ───────────────────
-
-export type SiteContentInsert = Omit<SiteContentRow, 'id' | 'updated_at'>
-export type ProductInsert = Omit<ProductRow, 'id' | 'created_at' | 'updated_at'>
-export type ProductPriceInsert = Omit<ProductPriceRow, 'id' | 'created_at' | 'updated_at'>
-export type ProductVariationInsert = Omit<ProductVariationRow, 'id'>
-export type CompanyInsert = Omit<CompanyRow, 'id' | 'created_at'>
-export type AchievementInsert = Omit<AchievementRow, 'id'>
-export type ServiceInsert = Omit<ServiceRow, 'id'>
-export type TeamMemberInsert = Omit<TeamMemberRow, 'id'>
-export type TestimonialInsert = Omit<TestimonialRow, 'id'>
-export type ContactSubmissionInsert = Omit<ContactSubmissionRow, 'id' | 'status' | 'created_at'>
-
-// ── Database shape (used by createClient<Database>()) ────────
-
 export interface Database {
   public: {
     Tables: {
+      user_profiles: {
+        Row: {
+          id: string
+          email: string
+          full_name: string | null
+          role: 'super_admin' | 'admin' | 'manager' | 'editor'
+          permissions: string[]
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id: string
+          email: string
+          full_name?: string | null
+          role?: 'super_admin' | 'admin' | 'manager' | 'editor'
+          permissions?: string[]
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          email?: string
+          full_name?: string | null
+          role?: 'super_admin' | 'admin' | 'manager' | 'editor'
+          permissions?: string[]
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      site_settings: {
+        Row: {
+          id: string
+          key: string
+          value: Json
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          key: string
+          value: Json
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          key?: string
+          value?: Json
+          updated_at?: string
+        }
+      }
       site_content: {
-        Row: SiteContentRow
-        Insert: SiteContentInsert
-        Update: Partial<SiteContentInsert>
+        Row: {
+          id: string
+          section: string
+          title: string | null
+          subtitle: string | null
+          description: string | null
+          badge_text: string | null
+          extra: Json | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          section: string
+          title?: string | null
+          subtitle?: string | null
+          description?: string | null
+          badge_text?: string | null
+          extra?: Json | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          section?: string
+          title?: string | null
+          subtitle?: string | null
+          description?: string | null
+          badge_text?: string | null
+          extra?: Json | null
+          created_at?: string
+          updated_at?: string
+        }
       }
       products: {
-        Row: ProductRow
-        Insert: ProductInsert
-        Update: Partial<ProductInsert>
+        Row: {
+          id: string
+          name: string
+          slug: string
+          description: string | null
+          icon: string | null
+          category: string | null
+          is_active: boolean
+          is_featured: boolean
+          sort_order: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          slug: string
+          description?: string | null
+          icon?: string | null
+          category?: string | null
+          is_active?: boolean
+          is_featured?: boolean
+          sort_order?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          slug?: string
+          description?: string | null
+          icon?: string | null
+          category?: string | null
+          is_active?: boolean
+          is_featured?: boolean
+          sort_order?: number
+          created_at?: string
+          updated_at?: string
+        }
       }
       product_prices: {
-        Row: ProductPriceRow
-        Insert: ProductPriceInsert
-        Update: Partial<ProductPriceInsert>
+        Row: {
+          id: string
+          product_id: string
+          plan_name: string
+          billing_cycle: 'monthly' | 'yearly'
+          price: number
+          currency: string
+          is_highlighted: boolean
+          sort_order: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          product_id: string
+          plan_name: string
+          billing_cycle: 'monthly' | 'yearly'
+          price: number
+          currency?: string
+          is_highlighted?: boolean
+          sort_order?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          product_id?: string
+          plan_name?: string
+          billing_cycle?: 'monthly' | 'yearly'
+          price?: number
+          currency?: string
+          is_highlighted?: boolean
+          sort_order?: number
+          created_at?: string
+        }
       }
       product_variations: {
-        Row: ProductVariationRow
-        Insert: ProductVariationInsert
-        Update: Partial<ProductVariationInsert>
-      }
-      companies: {
-        Row: CompanyRow
-        Insert: CompanyInsert
-        Update: Partial<CompanyInsert>
-      }
-      achievements: {
-        Row: AchievementRow
-        Insert: AchievementInsert
-        Update: Partial<AchievementInsert>
+        Row: {
+          id: string
+          product_price_id: string
+          feature: string
+          is_included: boolean
+          sort_order: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          product_price_id: string
+          feature: string
+          is_included?: boolean
+          sort_order?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          product_price_id?: string
+          feature?: string
+          is_included?: boolean
+          sort_order?: number
+          created_at?: string
+        }
       }
       services: {
-        Row: ServiceRow
-        Insert: ServiceInsert
-        Update: Partial<ServiceInsert>
+        Row: {
+          id: string
+          title: string
+          description: string
+          icon: string | null
+          is_active: boolean
+          sort_order: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          description: string
+          icon?: string | null
+          is_active?: boolean
+          sort_order?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          description?: string
+          icon?: string | null
+          is_active?: boolean
+          sort_order?: number
+          created_at?: string
+        }
       }
-      team_members: {
-        Row: TeamMemberRow
-        Insert: TeamMemberInsert
-        Update: Partial<TeamMemberInsert>
+      achievements: {
+        Row: {
+          id: string
+          value: string
+          title: string
+          description: string | null
+          icon: string | null
+          sort_order: number
+        }
+        Insert: {
+          id?: string
+          value: string
+          title: string
+          description?: string | null
+          icon?: string | null
+          sort_order?: number
+        }
+        Update: {
+          id?: string
+          value?: string
+          title?: string
+          description?: string | null
+          icon?: string | null
+          sort_order?: number
+        }
       }
-      testimonials: {
-        Row: TestimonialRow
-        Insert: TestimonialInsert
-        Update: Partial<TestimonialInsert>
+      companies: {
+        Row: {
+          id: string
+          name: string
+          logo_url: string
+          is_active: boolean
+          sort_order: number
+        }
+        Insert: {
+          id?: string
+          name: string
+          logo_url: string
+          is_active?: boolean
+          sort_order?: number
+        }
+        Update: {
+          id?: string
+          name?: string
+          logo_url?: string
+          is_active?: boolean
+          sort_order?: number
+        }
       }
-      contact_submissions: {
-        Row: ContactSubmissionRow
-        Insert: ContactSubmissionInsert
-        Update: Partial<Pick<ContactSubmissionRow, 'status'>>
+      demo_requests: {
+        Row: {
+          id: string
+          full_name: string
+          email: string
+          phone: string
+          company_name: string | null
+          product_name: string | null
+          message: string | null
+          status: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          full_name: string
+          email: string
+          phone: string
+          company_name?: string | null
+          product_name?: string | null
+          message?: string | null
+          status?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          full_name?: string
+          email?: string
+          phone?: string
+          company_name?: string | null
+          product_name?: string | null
+          message?: string | null
+          status?: string
+          created_at?: string
+        }
       }
-    }
-    Views: Record<string, never>
-    Functions: Record<string, never>
-    Enums: {
-      billing_cycle: BillingCycle
-      submission_status: SubmissionStatus
+      portfolio_showcase: {
+        Row: {
+          id: string
+          title: string
+          slug: string
+          category: string
+          description: string | null
+          image_url: string
+          badge_text: string | null
+          accent_color: string
+          live_url: string | null
+          is_featured: boolean
+          sort_order: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          slug: string
+          category: string
+          description?: string | null
+          image_url: string
+          badge_text?: string | null
+          accent_color?: string
+          live_url?: string | null
+          is_featured?: boolean
+          sort_order?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          slug?: string
+          category?: string
+          description?: string | null
+          image_url?: string
+          badge_text?: string | null
+          accent_color?: string
+          live_url?: string | null
+          is_featured?: boolean
+          sort_order?: number
+          created_at?: string
+        }
+      }
+      partner_integrations: {
+        Row: {
+          id: string
+          name: string
+          category: 'payment_gateway' | 'certification' | 'ecosystem'
+          logo_url: string
+          description: string | null
+          is_active: boolean
+          sort_order: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          category: 'payment_gateway' | 'certification' | 'ecosystem'
+          logo_url: string
+          description?: string | null
+          is_active?: boolean
+          sort_order?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          category?: 'payment_gateway' | 'certification' | 'ecosystem'
+          logo_url?: string
+          description?: string | null
+          is_active?: boolean
+          sort_order?: number
+          created_at?: string
+        }
+      }
+      job_postings: {
+        Row: {
+          id: string
+          title: string
+          department: string
+          location: string
+          employment_type: 'Full-time' | 'Part-time' | 'Contract' | 'Internship'
+          description: string
+          requirements: string[]
+          is_open: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          department: string
+          location?: string
+          employment_type?: 'Full-time' | 'Part-time' | 'Contract' | 'Internship'
+          description: string
+          requirements?: string[]
+          is_open?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          department?: string
+          location?: string
+          employment_type?: 'Full-time' | 'Part-time' | 'Contract' | 'Internship'
+          description?: string
+          requirements?: string[]
+          is_open?: boolean
+          created_at?: string
+        }
+      }
+      blog_posts: {
+        Row: {
+          id: string
+          title: string
+          slug: string
+          excerpt: string | null
+          content: string
+          cover_image: string | null
+          author_name: string
+          category: string
+          published_at: string
+          is_published: boolean
+        }
+        Insert: {
+          id?: string
+          title: string
+          slug: string
+          excerpt?: string | null
+          content: string
+          cover_image?: string | null
+          author_name?: string
+          category?: string
+          published_at?: string
+          is_published?: boolean
+        }
+        Update: {
+          id?: string
+          title?: string
+          slug?: string
+          excerpt?: string | null
+          content?: string
+          cover_image?: string | null
+          author_name?: string
+          category?: string
+          published_at?: string
+          is_published?: boolean
+        }
+      }
     }
   }
-}
-
-// ── Convenience joined types (for common queries) ────────────
-
-/** Product with all its pricing tiers and each tier's feature list */
-export interface ProductWithPricing extends ProductRow {
-  product_prices: (ProductPriceRow & {
-    product_variations: ProductVariationRow[]
-  })[]
 }
