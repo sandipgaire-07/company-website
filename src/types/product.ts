@@ -4,4 +4,5 @@ export type Product = {
   slug: string;
   description: string;
   icon: string;
+  image: string;
 };

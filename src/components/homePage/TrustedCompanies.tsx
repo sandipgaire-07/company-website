@@ -17,6 +17,7 @@ export default function TrustedCompanies() {
           <h2 className="mt-2 text-2xl font-bold tracking-tight text-[#0F1729] sm:text-3xl">
             Companies that trust our solutions
           </h2>
+
         </div>
 
         {/* Marquee */}
