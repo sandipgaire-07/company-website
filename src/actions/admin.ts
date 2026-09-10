@@ -329,6 +329,46 @@ export async function adminUpdateDemoRequestStatus(id: string, status: 'pending'
 }
 
 // ============================================================
+// ADMIN CONTACT SUBMISSIONS MANAGEMENT
+// ============================================================
+
+export async function adminGetContactSubmissions(): Promise<ActionResult<any[]>> {
+  try {
+    const auth = await requireAdmin()
+    if (!auth.authorized) return { success: false, error: auth.error }
+
+    const adminSupabase = createAdminClient()
+    const { data, error } = await (adminSupabase as any)
+      .from('contact_submissions')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (error) return { success: false, error: error.message }
+    return { success: true, data: data || [] }
+  } catch (err: any) {
+    return { success: false, error: err.message }
+  }
+}
+
+export async function adminUpdateContactStatus(id: string, status: 'new' | 'read' | 'archived'): Promise<ActionResult<null>> {
+  try {
+    const auth = await requireAdmin()
+    if (!auth.authorized) return { success: false, error: auth.error }
+
+    const adminSupabase = createAdminClient()
+    const { error } = await (adminSupabase as any)
+      .from('contact_submissions')
+      .update({ status })
+      .eq('id', id)
+
+    if (error) return { success: false, error: error.message }
+    return { success: true }
+  } catch (err: any) {
+    return { success: false, error: err.message }
+  }
+}
+
+// ============================================================
 // ADMIN PRODUCT FAQs
 // ============================================================
 
