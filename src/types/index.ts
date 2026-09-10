@@ -96,6 +96,14 @@ export interface DemoRequestInput {
   message?: string
 }
 
+export interface ContactSubmissionInput {
+  name: string
+  email: string
+  phone?: string
+  company?: string
+  message: string
+}
+
 export interface PortfolioShowcase {
   id: string
   title: string

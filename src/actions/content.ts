@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import type {
   ActionResult,
   DemoRequestInput,
+  ContactSubmissionInput,
   PortfolioShowcase,
   PartnerIntegration,
   JobPosting,
@@ -96,13 +97,30 @@ export async function getServices(): Promise<ActionResult<any[]>> {
 // ============================================================
 
 /**
- * Submit a Request Demo or Contact form inquiry
+ * Submit a Request Demo inquiry
  */
 export async function submitDemoRequest(input: DemoRequestInput): Promise<ActionResult<null>> {
   try {
     const supabase = await createClient()
     const { error } = await (supabase as any)
       .from('demo_requests')
+      .insert([input])
+
+    if (error) return { success: false, error: error.message }
+    return { success: true }
+  } catch (err: any) {
+    return { success: false, error: err.message }
+  }
+}
+
+/**
+ * Submit a Contact Form inquiry
+ */
+export async function submitContactForm(input: ContactSubmissionInput): Promise<ActionResult<null>> {
+  try {
+    const supabase = await createClient()
+    const { error } = await (supabase as any)
+      .from('contact_submissions')
       .insert([input])
 
     if (error) return { success: false, error: error.message }
