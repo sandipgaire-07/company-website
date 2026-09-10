@@ -1,6 +1,7 @@
 -- ============================================================
--- SINGLE ADMIN USER SETUP
--- All admin actions are controlled by one Admin user.
+-- 005_user_roles.sql
+-- SINGLE ADMIN USER SETUP & AUTO-SYNC TRIGGER
+-- All admin actions are controlled by Admin users.
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS admin_user (
@@ -13,19 +14,20 @@ CREATE TABLE IF NOT EXISTS admin_user (
 ALTER TABLE admin_user ENABLE ROW LEVEL SECURITY;
 
 -- Allow public read of admin email to verify who is the admin
+DROP POLICY IF EXISTS "Public read admin_user" ON admin_user;
 CREATE POLICY "Public read admin_user" ON admin_user FOR SELECT USING (true);
 
 -- Seed initial single admin user email
 INSERT INTO admin_user (email) VALUES ('admin@nctsoft.com.np')
 ON CONFLICT (email) DO NOTHING;
 
--- Auto-sync any user created in Supabase Dashboard (auth.users) into admin_user table
+-- 1. AUTO-SYNC: Copy all users created in Supabase Dashboard (auth.users) into admin_user table
 INSERT INTO admin_user (email)
 SELECT email FROM auth.users
 WHERE email IS NOT NULL
 ON CONFLICT (email) DO NOTHING;
 
--- Automatic trigger to sync future users created in Supabase Dashboard
+-- 2. AUTOMATIC TRIGGER: Sync any future user created in Supabase Dashboard directly into admin_user table
 CREATE OR REPLACE FUNCTION public.handle_new_admin_user()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -43,8 +45,7 @@ CREATE TRIGGER on_auth_user_created_admin
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_admin_user();
 
-
--- Seed default admin account into Supabase auth.users
+-- 3. SEED DEFAULT ADMIN ACCOUNT: Seed default admin account into Supabase auth.users if not present
 -- Password: Admin@123456
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
@@ -88,4 +89,3 @@ SELECT
 WHERE NOT EXISTS (
   SELECT 1 FROM auth.users WHERE email = 'admin@nctsoft.com.np'
 );
-
