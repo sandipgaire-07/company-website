@@ -19,6 +19,31 @@ CREATE POLICY "Public read admin_user" ON admin_user FOR SELECT USING (true);
 INSERT INTO admin_user (email) VALUES ('admin@nctsoft.com.np')
 ON CONFLICT (email) DO NOTHING;
 
+-- Auto-sync any user created in Supabase Dashboard (auth.users) into admin_user table
+INSERT INTO admin_user (email)
+SELECT email FROM auth.users
+WHERE email IS NOT NULL
+ON CONFLICT (email) DO NOTHING;
+
+-- Automatic trigger to sync future users created in Supabase Dashboard
+CREATE OR REPLACE FUNCTION public.handle_new_admin_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.email IS NOT NULL THEN
+    INSERT INTO public.admin_user (email)
+    VALUES (NEW.email)
+    ON CONFLICT (email) DO NOTHING;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS on_auth_user_created_admin ON auth.users;
+CREATE TRIGGER on_auth_user_created_admin
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_admin_user();
+
+
 -- Seed default admin account into Supabase auth.users
 -- Password: Admin@123456
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
