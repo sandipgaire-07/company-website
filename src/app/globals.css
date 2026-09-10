@@ -2,25 +2,43 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
-}
+  --foreground: #0f1729;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --card: #ffffff;
+  --card-foreground: #0f1729;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --popover: #ffffff;
+  --popover-foreground: #0f1729;
+
+  --primary: #072069;
+  --primary-foreground: #ffffff;
+
+  --secondary: #f3f4f7;
+  --secondary-foreground: #0f1729;
+
+  --muted: #f8fafc;
+  --muted-foreground: #676f7e;
+
+  --accent: #ebf0fa;
+  --accent-foreground: #072069;
+
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+
+  --border: #dadee7;
+  --input: #dadee7;
+  --ring: #0ea5e9;
+}
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-100% - 3rem));
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.animate-marquee {
+  animation: marquee 30s linear infinite;
 }
