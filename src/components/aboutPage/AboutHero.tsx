@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 export default function AboutHero() {
@@ -32,11 +33,11 @@ export default function AboutHero() {
               }
               nativeButton={false}
               size="lg"
-              className="h-auto rounded-md bg-gradient-to-r from-[#072069] to-[#0EA5E9] px-6 py-3 text-sm font-medium text-white shadow-lg shadow-[#0EA5E9]/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#0EA5E9]/30"
+              className="h-auto rounded-md bg-linear-to-r from-[#072069] to-[#0EA5E9] px-6 py-3 text-sm font-medium text-white shadow-lg shadow-[#0EA5E9]/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#0EA5E9]/30"
             />
 
             <Button
-              render={<a href="/products">Explore Our Products</a>}
+              render={<Link href="/products">Explore Our Products</Link>}
               nativeButton={false}
               size="lg"
               variant="outline"
@@ -46,7 +47,7 @@ export default function AboutHero() {
         </div>
 
         {/* Visual */}
-        <div className="relative flex min-h-[360px] items-center justify-center overflow-hidden rounded-3xl bg-[#F8FAFC]">
+        <div className="relative flex min-h-90 items-center justify-center overflow-hidden rounded-3xl bg-[#F8FAFC]">
           <div className="absolute left-1/2 top-1/2 size-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#0EA5E9]/10 blur-3xl" />
 
           <Image

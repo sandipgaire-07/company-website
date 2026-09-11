@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import ProductFeatures from "@/components/productDetails/ProductFeatures";
 import ProductHero from "@/components/productDetails/ProductHero";
 import ProductStats from "@/components/productDetails/ProductStats";
+import ProductPricing from "@/components/productDetails/ProductPricing";
 import { getProductDetails, productDetails } from "@/data/products/productDetails";
 
 export function generateStaticParams() {
@@ -24,8 +25,9 @@ export default async function ProductDetailsPage({
   return (
     <main>
       <ProductHero product={product} />
-      <ProductStats stats={product.stats} />
-      <ProductFeatures features={product.features} />
+      <ProductStats stats={product.stats} color={product.color} />
+      <ProductFeatures features={product.features} color={product.color} />
+      <ProductPricing pricing={product.pricing} color={product.color} />
     </main>
   );
 }

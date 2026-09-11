@@ -17,6 +17,8 @@ export default function Stats() {
             <span className="text-[#072069]">Our Story</span>
           </h2>
 
+          <div className="mx-auto mt-4 h-1.5 w-24 rounded-full bg-gradient-to-r from-[#072069] via-[#0EA5E9] to-[#3BE3A0]" />
+
           <p className="mt-5 text-base leading-7 text-[#676F7E]">
             Our growth is reflected in the businesses we have helped,
             solutions we have delivered, and relationships we have built.

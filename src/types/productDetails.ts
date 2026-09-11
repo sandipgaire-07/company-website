@@ -12,13 +12,24 @@ export type ProductFeature = {
   icon: string;
 };
 
-export type ProductDetails = {
-  productId: string;
-  slug: string;
+import { Product } from "@/types/product";
+
+export type ProductPricingPlan = {
+  id: string;
   name: string;
   description: string;
-  image: string;
+  price: number;
+  discountedPrice?: number;
+  currency: string;
+  billingPeriod: string;
+  features: string[];
+  isPopular: boolean;
+  sortOrder: number;
+};
+
+export type ProductDetails = Product & {
   imageAlt: string;
   stats: ProductStat[];
   features: ProductFeature[];
+  pricing: ProductPricingPlan[];
 };

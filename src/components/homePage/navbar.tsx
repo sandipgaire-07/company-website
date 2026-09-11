@@ -3,14 +3,15 @@
 
 import Link from "next/link";
 import {
-  BriefcaseBusiness,
+  Building2,
   ChevronDown,
+  CookingPot,
+  Fingerprint,
   Menu,
-  ShoppingBag,
-  Users,
+  ReceiptText,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,14 +26,14 @@ import { products } from "@/data/products";
 const navItems = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
-  { label: "Services", href: "/services" },
   { label: "Contact", href: "/contact" },
 ];
 
 const iconMap = {
-  ShoppingBag,
-  Users,
-  BriefcaseBusiness,
+  Hospitality: Building2,
+  "Food & Beverage": CookingPot,
+  "Workforce Tech": Fingerprint,
+  FinTech: ReceiptText,
 };
 
 export default function Navbar() {
@@ -40,18 +41,28 @@ export default function Navbar() {
   const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
 
-  let closeTimeout: NodeJS.Timeout;
+  const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleProductsEnter = () => {
-    clearTimeout(closeTimeout);
+    if (closeTimeout.current) {
+      clearTimeout(closeTimeout.current);
+    }
     setIsProductsOpen(true);
   };
 
   const handleProductsLeave = () => {
-    closeTimeout = setTimeout(() => {
+    closeTimeout.current = setTimeout(() => {
       setIsProductsOpen(false);
     }, 150);
   };
+
+  useEffect(() => {
+    return () => {
+      if (closeTimeout.current) {
+        clearTimeout(closeTimeout.current);
+      }
+    };
+  }, []);
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
@@ -122,8 +133,7 @@ export default function Navbar() {
   </div>
 
   {products.map((product) => {
-    const Icon =
-      iconMap[product.icon as keyof typeof iconMap];
+    const Icon = iconMap[product.category as keyof typeof iconMap];
 
     return (
       <DropdownMenuItem
@@ -135,13 +145,16 @@ export default function Navbar() {
       >
         <div className="flex w-full items-start gap-3 rounded-lg p-3 transition-all duration-200">
           {/* Icon */}
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[#072069]/10 to-[#0EA5E9]/15 transition-all duration-200 group-hover:from-[#072069] group-hover:to-[#0EA5E9]">
-            <Icon className="h-5 w-5 text-[#072069] transition-colors duration-200 group-hover:text-white" />
+          <div
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-all duration-200 group-hover:text-white"
+            style={{ backgroundColor: `${product.color}15`, color: product.color }}
+          >
+            <Icon className="h-5 w-5 transition-colors duration-200" />
           </div>
 
           {/* Content */}
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-[#0F1729] transition-colors duration-200 group-hover:text-[#072069]">
+            <p className="text-sm font-semibold text-[#0F1729] transition-colors duration-200" style={{ color: product.color }}>
               {product.name}
             </p>
 
@@ -262,8 +275,7 @@ export default function Navbar() {
       </div>
 
       {products.map((product) => {
-        const Icon =
-          iconMap[product.icon as keyof typeof iconMap];
+         const Icon = iconMap[product.category as keyof typeof iconMap];
 
         return (
           <Link
@@ -273,13 +285,16 @@ export default function Navbar() {
             className="group flex items-start gap-3 rounded-lg border border-transparent bg-white px-3 py-3 transition-all duration-200 hover:border-[#DADEE7] hover:bg-white hover:shadow-sm"
           >
             {/* Icon */}
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[#072069]/10 to-[#0EA5E9]/15 transition-all duration-200 group-hover:from-[#072069] group-hover:to-[#0EA5E9]">
-              <Icon className="h-4 w-4 text-[#072069] transition-colors duration-200 group-hover:text-white" />
+            <div
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-all duration-200 group-hover:text-white"
+              style={{ backgroundColor: `${product.color}15`, color: product.color }}
+            >
+              <Icon className="h-4 w-4 transition-colors duration-200" />
             </div>
 
             {/* Product Info */}
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold text-[#0F1729] transition-colors duration-200 group-hover:text-[#072069]">
+              <p className="text-sm font-semibold text-[#0F1729] transition-colors duration-200" style={{ color: product.color }}>
                 {product.name}
               </p>
 

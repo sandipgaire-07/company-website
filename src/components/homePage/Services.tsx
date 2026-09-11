@@ -4,7 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { services } from "@/data/services";
+import { serviceDetails } from "@/data/services/serviceDetails";
 
 export default function Services() {
   return (
@@ -32,24 +32,24 @@ export default function Services() {
 
         {/* Services Grid */}
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((service, index) => (
+          {serviceDetails.map((service, index) => (
             <Card
               key={service.id}
               className="group relative overflow-hidden border-0 bg-white shadow-sm ring-1 ring-[#DADEE7] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
               <CardContent className="relative p-6 sm:p-7">
                 {/* Lottie Animation */}
-                <div className="mt-5 flex h-36 items-center justify-center overflow-hidden rounded-2xl bg-[#F8FAFC]">
+                <div className="mt-5 flex h-50 items-center justify-center overflow-hidden rounded-2xl bg-[#F8FAFC]">
                   <DotLottieReact
                     src={service.animationUrl}
                     loop
                     autoplay
-                    className="h-40 w-40"
+                    className="h-50 w-50"
                   />
                 </div>
 
                 {/* Content */}
-                <h3 className="mt-6 text-xl font-semibold text-[#0F1729]">
+                <h3 className="mt-6 text-2xl font-bold text-[#0f1930]">
                   {service.title}
                 </h3>
 
@@ -67,7 +67,7 @@ export default function Services() {
                 </Link>
 
                 {/* Bottom Accent */}
-                <div className="absolute bottom-0 left-0 h-1 w-0 bg-[#0EA5E9] transition-all duration-300 group-hover:w-full" />
+                 <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-[#072069] via-[#0EA5E9] to-[#3BE3A0] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               </CardContent>
             </Card>
           ))}

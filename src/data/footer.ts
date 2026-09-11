@@ -26,34 +26,24 @@ export const footerData: FooterData = {
 
   products: [
     {
-      id: "restroms",
-      label: "RestroMS",
-      href: "/products/restroms",
+      id: "apexflow-hospitality",
+      label: "ApexFlow Hospitality",
+      href: "/products/apexflow-hospitality",
     },
     {
-      id: "smartkarobar",
-      label: "SmartKarobar",
-      href: "/products/smartkarobar",
+      id: "apexflow-restrocloud",
+      label: "ApexFlow RestroCloud",
+      href: "/products/apexflow-restrocloud",
     },
     {
-      id: "upasthiti",
-      label: "Upasthiti",
-      href: "/products/upasthiti",
+      id: "apexflow-biopulse",
+      label: "ApexFlow BioPulse",
+      href: "/products/apexflow-biopulse",
     },
     {
-      id: "atithya",
-      label: "Atithya",
-      href: "/products/atithya",
-    },
-    {
-      id: "menumakchha",
-      label: "Menu Ma K Chha",
-      href: "/products/menumakchha",
-    },
-    {
-      id: "smarttraining",
-      label: "SmartTraining",
-      href: "/products/smarttraining",
+      id: "apexflow-ledgerpro",
+      label: "ApexFlow LedgerPro",
+      href: "/products/apexflow-ledgerpro",
     },
   ],
 

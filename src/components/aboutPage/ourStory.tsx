@@ -7,7 +7,7 @@ export default function OurStory() {
     <section className="px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
       <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-2 lg:gap-20">
         {/* Image */}
-        <div className="relative flex min-h-[360px] items-center justify-center overflow-hidden rounded-3xl bg-[#F8FAFC]">
+        <div className="relative flex min-h-90 items-center justify-center overflow-hidden rounded-3xl bg-[#F8FAFC]">
           <div className="absolute left-1/2 top-1/2 size-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#0EA5E9]/10 blur-3xl" />
 
           <Image
@@ -28,6 +28,8 @@ export default function OurStory() {
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#0F1729] sm:text-4xl lg:text-5xl">
             {ourStory.title}
           </h2>
+
+          <div className="mt-4 h-1.5 w-24 rounded-full bg-linear-to-r from-[#072069] via-[#0EA5E9] to-[#3BE3A0]" />
 
           <p className="mt-5 max-w-2xl text-base leading-7 text-[#676F7E] sm:text-lg">
             {ourStory.description}

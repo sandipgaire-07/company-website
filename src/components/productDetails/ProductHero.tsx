@@ -10,7 +10,10 @@ export default function ProductHero({ product }: { product: ProductDetails }) {
     <section className="px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
       <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-2 lg:gap-20">
         <div className="relative flex min-h-[320px] items-center justify-center overflow-hidden rounded-3xl bg-[#F8FAFC] p-8 sm:min-h-[420px]">
-          <div className="absolute left-1/2 top-1/2 size-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#0EA5E9]/10 blur-3xl" />
+          <div
+            className="absolute left-1/2 top-1/2 size-72 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+            style={{ backgroundColor: `${product.color}25` }}
+          />
           <Image
             src={product.image}
             alt={product.imageAlt}
@@ -21,13 +24,19 @@ export default function ProductHero({ product }: { product: ProductDetails }) {
         </div>
 
         <div>
-          <p className="text-sm font-semibold uppercase tracking-wider text-[#0EA5E9]">
-            Our Product
+          <div
+            className="inline-flex rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-wider"
+            style={{ backgroundColor: `${product.color}15`, color: product.color }}
+          >
+            {product.category}
+          </div>
+          <p className="mt-4 text-sm font-semibold uppercase tracking-wider text-[#676F7E]">
+            {product.badge}
           </p>
           <h1 className="mt-3 text-4xl font-bold tracking-tight text-[#0F1729] sm:text-5xl lg:text-6xl">
             {product.name}
           </h1>
-          <div className="mt-4 h-1.5 w-24 rounded-full bg-gradient-to-r from-[#072069] via-[#0EA5E9] to-[#3BE3A0]" />
+          <div className="mt-4 h-1.5 w-24 rounded-full" style={{ backgroundColor: product.color }} />
           <p className="mt-6 max-w-xl text-base leading-7 text-[#676F7E] sm:text-lg">
             {product.description}
           </p>

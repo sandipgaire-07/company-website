@@ -18,6 +18,8 @@ export default function TrustedCompanies() {
             Companies that trust our solutions
           </h2>
 
+          <div className="mx-auto mt-4 h-1.5 w-24 rounded-full bg-gradient-to-r from-[#072069] via-[#0EA5E9] to-[#3BE3A0]" />
+
         </div>
 
         {/* Marquee */}
