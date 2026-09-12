@@ -67,6 +67,8 @@ export default function AchievementStory() {
             </span>
           </h2>
 
+          <div className="mt-4 h-1.5 w-24 rounded-full bg-gradient-to-r from-[#072069] via-[#0EA5E9] to-[#3BE3A0]" />
+
           <p className="mt-5 max-w-2xl text-base leading-7 text-[#676F7E]">
             Our journey is a testament to teamwork and perseverance. Together,
             we&apos;ve overcome challenges and celebrated victories, creating a
