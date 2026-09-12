@@ -2,6 +2,7 @@ import {
   Blocks, ChartNoAxesCombined, Compass, Gauge, Layers3, Lightbulb,
   Megaphone, MonitorSmartphone, Palette, Scaling, SearchCheck, Settings2,
   Share2, ShieldCheck, Smartphone, Sparkles, Workflow, Zap,
+  Target,
 } from "lucide-react";
 import type { CSSProperties } from "react";
 
@@ -11,7 +12,7 @@ import { ServiceFeature } from "@/types/service";
 const iconMap = {
   Blocks, ChartNoAxesCombined, Compass, Gauge, Layers3, Lightbulb, Megaphone,
   MonitorSmartphone, Palette, Scaling, SearchCheck, Settings2, Share2,
-  ShieldCheck, Smartphone, Sparkles, Workflow, Zap,
+  ShieldCheck, Smartphone, Sparkles, Target, Workflow, Zap,
 };
 
 export default function ServiceFeatures({ features, color }: { features: ServiceFeature[]; color: string }) {

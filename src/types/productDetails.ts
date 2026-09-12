@@ -24,11 +24,9 @@ export type ProductPricingPlan = {
   billingPeriod: string;
   features: string[];
   isPopular: boolean;
-  sortOrder: number;
 };
 
 export type ProductDetails = Product & {
-  imageAlt: string;
   stats: ProductStat[];
   features: ProductFeature[];
   pricing: ProductPricingPlan[];

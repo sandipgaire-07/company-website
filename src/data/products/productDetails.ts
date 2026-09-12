@@ -50,7 +50,6 @@ export const productDetails: ProductDetails[] = [
     badge: "Enterprise SaaS",
     color: "#4458A1",
     sortOrder: 1,
-    imageAlt: "ApexFlow Hospitality management dashboard",
     stats: [
       { id: "properties", value: "100+", label: "Properties", description: "Managed through the platform" },
       { id: "bookings", value: "25K+", label: "Bookings", description: "Processed every month" },
@@ -77,7 +76,7 @@ export const productDetails: ProductDetails[] = [
     badge: "Flagship POS",
     color: "#E7212B",
     sortOrder: 2,
-    imageAlt: "ApexFlow RestroCloud restaurant dashboard",
+    
     stats: [
       { id: "orders", value: "50K+", label: "Orders", description: "Handled each month" },
       { id: "service", value: "27%", label: "Faster Service", description: "From kitchen dispatch" },
@@ -104,7 +103,6 @@ export const productDetails: ProductDetails[] = [
     badge: "HR Automation",
     color: "#10B981",
     sortOrder: 3,
-    imageAlt: "ApexFlow BioPulse workforce dashboard",
     stats: [
       { id: "employees", value: "1K+", label: "Employees", description: "Synced across teams" },
       { id: "payroll", value: "40%", label: "Less Admin", description: "Work for HR teams" },
@@ -131,7 +129,7 @@ export const productDetails: ProductDetails[] = [
     badge: "Audit Ready",
     color: "#F59E0B",
     sortOrder: 4,
-    imageAlt: "ApexFlow LedgerPro accounting dashboard",
+  
     stats: [
       { id: "businesses", value: "400+", label: "Businesses", description: "Running cleaner books" },
       { id: "reports", value: "12K+", label: "Reports", description: "Generated every month" },
