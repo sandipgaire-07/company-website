@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
-import { ProductDetails } from "@/types/productDetails";
+import Link from "next/link";
+
+import { ArrowLeft } from "lucide-react";
+
 import ProductForm from "@/components/admin/products/ProductForm";
 import { productDetails } from "@/data/products/productDetails";
-import { Button } from "@base-ui/react";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 
 type EditProductPageProps = {
   params: Promise<{
@@ -17,7 +17,9 @@ export default async function EditProductPage({
 }: EditProductPageProps) {
   const { id } = await params;
 
-  const product = productDetails.find((product) => product.id === id);
+  const product = productDetails.find(
+    (product) => product.id === id
+  );
 
   if (!product) {
     notFound();
@@ -25,12 +27,27 @@ export default async function EditProductPage({
 
   return (
     <div className="space-y-7">
-      <Button
-  className="p-2 rounded bg-linear-to-r bg-[#072069] text-white hover:opacity-90"
-  render={<Link href="/admin/products" />}
->
-  Back to products
-</Button>
+      <Link
+        href="/admin/products"
+        className="
+          inline-flex
+          items-center
+          gap-2
+          rounded-md
+          bg-[#072069]
+          px-4
+          py-2
+          text-sm
+          font-medium
+          text-white
+          transition-colors
+          hover:bg-[#072069]/90
+        "
+      >
+        <ArrowLeft className="size-4" />
+        Back to products
+      </Link>
+
       <div className="mt-5">
         <h1 className="text-2xl font-bold tracking-tight text-[#0F1729]">
           Edit Product

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import TestimonialList from "@/components/admin/testimonials/TestimonailList";
 
 export default function TestimonialsPage() {
@@ -18,13 +17,27 @@ export default function TestimonialsPage() {
           </p>
         </div>
 
-        <Button
-          className="bg-linear-to-r bg-[#072069] text-white hover:opacity-90"
-          render={<Link href="/admin/testimonials/new" />}
+        <Link
+          href="/admin/testimonials/new"
+          className="
+            inline-flex
+            items-center
+            justify-center
+            gap-2
+            rounded-md
+            bg-[#072069]
+            px-4
+            py-2
+            text-sm
+            font-medium
+            text-white
+            transition-colors
+            hover:bg-[#072069]/90
+          "
         >
-          <Plus />
+          <Plus className="size-4" />
           Add Testimonial
-        </Button>
+        </Link>
       </div>
 
       <TestimonialList />

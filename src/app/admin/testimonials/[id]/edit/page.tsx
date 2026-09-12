@@ -2,8 +2,6 @@ import { notFound } from "next/navigation";
 
 import { testimonials } from "@/data/testimonials";
 import TestimonialForm from "@/components/admin/testimonials/TestimonialForm";
-import { Button } from "@base-ui/react";
-import Link from "next/link";
 
 type EditTestimonialPageProps = {
   params: Promise<{

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Pencil } from "lucide-react";
 
-import { serviceDetails } from "@/data/services/serviceDetails";
+import { companies } from "@/data/companies";
 
 import {
   Card,
@@ -10,22 +10,22 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import DeleteServiceDialog from "@/components/admin/services/DeleteServiceDialog";
+import DeleteCollaborationDialog from "./DeleteCollaborationDialog";
 
-export default function ServiceList() {
+export default function CollaborationList() {
   return (
     <Card className="border-[#DADEE7] shadow-sm">
       <CardHeader>
         <CardTitle className="text-lg text-[#0F1729]">
-          All Services
+          All Collaborations
         </CardTitle>
       </CardHeader>
 
       <CardContent>
         <div className="space-y-4">
-          {serviceDetails.map((service) => (
+          {companies.map((company) => (
             <div
-              key={service.id}
+              key={company.id}
               className="
                 flex flex-col gap-4 rounded-xl
                 border border-[#DADEE7] p-4
@@ -35,37 +35,31 @@ export default function ServiceList() {
                 sm:flex-row sm:items-center sm:justify-between
               "
             >
-              {/* Service information */}
+              {/* Collaboration information */}
               <div className="flex items-center gap-4">
-                <div
-                  className="flex size-14 shrink-0 items-center justify-center rounded-lg"
-                  style={{ backgroundColor: `${service.color}15` }}
-                >
-                  <div
-                    className="size-5 rounded-full"
-                    style={{ backgroundColor: service.color }}
+                <div className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[#F8FAFC]">
+                  <img
+                    src={company.logo}
+                    alt={company.name}
+                    className="size-full object-contain p-2"
                   />
                 </div>
 
                 <div>
                   <h3 className="font-semibold text-[#0F1729]">
-                    {service.title}
+                    {company.name}
                   </h3>
 
-                  <p className="mt-1 max-w-xl text-sm text-[#676F7E]">
-                    {service.description}
+                  <p className="text-sm text-[#676F7E]">
+                    Partnership / Collaboration
                   </p>
-
-                  <span className="mt-2 inline-block rounded-full bg-[#EBF0FA] px-2.5 py-1 text-xs font-medium text-[#072069]">
-                    {service.features.length} Features
-                  </span>
                 </div>
               </div>
 
               {/* Actions */}
               <div className="flex shrink-0 items-center gap-2">
                 <Link
-                  href={`/admin/services/${service.id}/edit`}
+                  href={`/admin/collaborations/${company.id}/edit`}
                   className="
                     inline-flex
                     items-center
@@ -89,7 +83,9 @@ export default function ServiceList() {
                   Edit
                 </Link>
 
-                <DeleteServiceDialog serviceName={service.title} />
+                <DeleteCollaborationDialog
+                  collaborationName={company.name}
+                />
               </div>
             </div>
           ))}

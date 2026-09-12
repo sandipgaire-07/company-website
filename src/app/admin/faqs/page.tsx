@@ -1,24 +1,24 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
 
-import CareerList from "@/components/admin/careers/CareerList";
+import FaqList from "@/components/admin/faq/FaqList";
 
-export default function CareersPage() {
+export default function FaqsPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-[#0F1729]">
-            Careers
+            FAQs
           </h1>
 
           <p className="mt-1 text-sm text-[#676F7E]">
-            Manage the job openings displayed on your website.
+            Manage the frequently asked questions displayed on your website.
           </p>
         </div>
 
         <Link
-          href="/admin/careers/new"
+          href="/admin/faqs/new"
           className="
             inline-flex
             items-center
@@ -36,11 +36,11 @@ export default function CareersPage() {
           "
         >
           <Plus className="size-4" />
-          Add Job
+          Add FAQ
         </Link>
       </div>
 
-      <CareerList />
+      <FaqList />
     </div>
   );
 }

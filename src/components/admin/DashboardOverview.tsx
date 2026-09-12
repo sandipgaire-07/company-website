@@ -2,10 +2,10 @@ import Link from "next/link";
 import {
   BriefcaseBusiness,
   FileText,
-  Handshake,
   HelpCircle,
   MessageSquare,
   Package,
+  Handshake,
   Wrench,
 } from "lucide-react";
 
@@ -25,56 +25,48 @@ const overviewItems = [
     count: products.length,
     href: "/admin/products",
     icon: Package,
-    color: "#0EA5E9",
   },
   {
     title: "Services",
     count: serviceDetails.length,
     href: "/admin/services",
     icon: Wrench,
-    color: "#A855F7",
   },
   {
     title: "Testimonials",
     count: testimonials.length,
     href: "/admin/testimonials",
     icon: MessageSquare,
-    color: "#F59E0B",
   },
   {
     title: "FAQs",
     count: faqs.length,
     href: "/admin/faqs",
     icon: HelpCircle,
-    color: "#10B981",
   },
   {
     title: "Careers",
     count: jobs.length,
     href: "/admin/careers",
     icon: BriefcaseBusiness,
-    color: "#3B82F6",
   },
   {
     title: "Blog Posts",
     count: blogs.length,
     href: "/admin/blog",
     icon: FileText,
-    color: "#EC4899",
   },
   {
     title: "Collaborations",
     count: companies.length,
     href: "/admin/collaborations",
     icon: Handshake,
-    color: "#14B8A6",
   },
 ];
 
 export default function DashboardOverview() {
   return (
     <div className="space-y-8">
-      {/* Header */}
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-[#0F1729]">
           Welcome back, Admin
@@ -85,7 +77,6 @@ export default function DashboardOverview() {
         </p>
       </div>
 
-      {/* Overview Cards */}
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {overviewItems.map((item) => {
           const Icon = item.icon;
@@ -95,27 +86,17 @@ export default function DashboardOverview() {
               <Card
                 className="
                   h-full
-                  border
                   border-[#DADEE7]
                   shadow-sm
                   transition-all
                   duration-200
                   hover:-translate-y-0.5
+                  hover:border-[#0EA5E9]/40
                   hover:shadow-md
                 "
-                style={{
-                  borderTopColor: item.color,
-                  borderTopWidth: "3px",
-                }}
               >
                 <CardContent className="flex items-center gap-4 p-5">
-                  <div
-                    className="flex size-12 shrink-0 items-center justify-center rounded-xl"
-                    style={{
-                      backgroundColor: `${item.color}15`,
-                      color: item.color,
-                    }}
-                  >
+                  <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#EBF0FA] text-[#072069]">
                     <Icon className="size-5" />
                   </div>
 
@@ -135,84 +116,84 @@ export default function DashboardOverview() {
         })}
       </div>
 
-      {/* Quick Actions */}
       <div className="space-y-4">
-        <div>
-          <h2 className="text-lg font-semibold text-[#0F1729]">
-            Quick Actions
-          </h2>
+  <div>
+    <h2 className="text-lg font-semibold text-[#0F1729]">
+      Quick Actions
+    </h2>
 
-          <p className="mt-1 text-sm text-[#676F7E]">
-            Quickly add or manage website content.
-          </p>
-        </div>
+    <p className="mt-1 text-sm text-[#676F7E]">
+      Quickly add or manage website content.
+    </p>
+  </div>
 
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          <Link
-            href="/admin/products/new"
-            className="
-              inline-flex
-              items-center
-              justify-center
-              rounded-md
-              bg-[#072069]
-              px-4
-              py-3
-              text-sm
-              font-medium
-              text-white
-              transition-colors
-              hover:bg-[#072069]/90
-            "
-          >
-            Add Product
-          </Link>
+  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <Link
+      href="/admin/products/new"
+      className="
+        inline-flex
+        items-center
+        justify-center
+        rounded-md
+        bg-[#072069]
+        px-4
+        py-3
+        text-sm
+        font-medium
+        text-white
+        transition-colors
+        hover:bg-[#072069]/90
+      "
+    >
+      Add Product
+    </Link>
 
-          <Link
-            href="/admin/services/new"
-            className="
-              inline-flex
-              items-center
-              justify-center
-              rounded-md
-              border
-              border-[#DADEE7]
-              bg-white
-              px-4
-              py-3
-              text-sm
-              font-medium
-              text-[#0F1729]
-              transition-colors
-              hover:bg-[#F8FAFC]
-            "
-          >
-            Add Service
-          </Link>
+    <Link
+      href="/admin/services/new"
+      className="
+        inline-flex
+        items-center
+        justify-center
+        rounded-md
+        border
+        border-[#DADEE7]
+        bg-white
+        px-4
+        py-3
+        text-sm
+        font-medium
+        text-[#0F1729]
+        transition-colors
+        hover:bg-[#F8FAFC]
+      "
+    >
+      Add Service
+    </Link>
 
-          <Link
-            href="/admin/blog/new"
-            className="
-              inline-flex
-              items-center
-              justify-center
-              rounded-md
-              border
-              border-[#DADEE7]
-              bg-white
-              px-4
-              py-3
-              text-sm
-              font-medium
-              text-[#0F1729]
-              transition-colors
-              hover:bg-[#F8FAFC]
-            "
-          >
-            Add Blog Post
-          </Link>
-        </div>
-      </div>
+    <Link
+      href="/admin/blog/new"
+      className="
+        inline-flex
+        items-center
+        justify-center
+        rounded-md
+        border
+        border-[#DADEE7]
+        bg-white
+        px-4
+        py-3
+        text-sm
+        font-medium
+        text-[#0F1729]
+        transition-colors
+        hover:bg-[#F8FAFC]
+      "
+    >
+      Add Blog Post
+    </Link>
+  </div>
+</div>
     </div>
+    
   );
 }

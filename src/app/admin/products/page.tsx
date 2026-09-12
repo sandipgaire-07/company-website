@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import ProductList from "@/components/admin/products/ProductList";
 
 export default function ProductsPage() {
@@ -19,17 +18,31 @@ export default function ProductsPage() {
           </p>
         </div>
 
-        <Button
-  className="bg-linear-to-r bg-[#072069] text-white hover:opacity-90"
-  render={<Link href="/admin/products/new" />}
->
-  <Plus />
-  Add Product
-</Button>
+        <Link
+          href="/admin/products/new"
+          className="
+            inline-flex
+            items-center
+            justify-center
+            gap-2
+            rounded-md
+            bg-[#072069]
+            px-4
+            py-2
+            text-sm
+            font-medium
+            text-white
+            transition-colors
+            hover:bg-[#072069]/90
+          "
+        >
+          <Plus className="size-4" />
+          Add Product
+        </Link>
       </div>
 
       {/* Product list */}
-      <ProductList/>
+      <ProductList />
     </div>
   );
 }

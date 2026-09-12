@@ -5,11 +5,12 @@ import { usePathname } from "next/navigation";
 import {
   BriefcaseBusiness,
   FileText,
+  Handshake,
   HelpCircle,
   LayoutDashboard,
   MessageSquare,
   Package,
-  Settings,
+  Building2,
   Wrench,
 } from "lucide-react";
 
@@ -27,10 +28,24 @@ import {
 const contentItems = [
   { title: "Products", href: "/admin/products", icon: Package },
   { title: "Services", href: "/admin/services", icon: Wrench },
-  { title: "Testimonials", href: "/admin/testimonials", icon: MessageSquare },
+  {
+    title: "Testimonials",
+    href: "/admin/testimonials",
+    icon: MessageSquare,
+  },
   { title: "FAQs", href: "/admin/faqs", icon: HelpCircle },
+   {
+    title: "Collaborations",
+    href: "/admin/collaborations",
+    icon: Handshake,
+  },
   { title: "Careers", href: "/admin/careers", icon: BriefcaseBusiness },
   { title: "Blog", href: "/admin/blog", icon: FileText },
+  {
+    title: "Company Details",
+    href: "/admin/company-details",
+    icon: Building2,
+  },
 ];
 
 export default function AdminSidebar() {
@@ -39,7 +54,6 @@ export default function AdminSidebar() {
   return (
     <Sidebar className="bg-[#020e33] text-white">
       <SidebarContent>
-
         {/* Brand */}
         <div className="px-4 py-5">
           <Link href="/admin" className="flex items-center gap-3">
@@ -48,12 +62,8 @@ export default function AdminSidebar() {
             </div>
 
             <div>
-              <p className="font-semibold">
-                LeafClutch
-              </p>
-              <p className="">
-                Admin Panel
-              </p>
+              <p className="font-semibold">LeafClutch</p>
+              <p>Admin Panel</p>
             </div>
           </Link>
         </div>
@@ -89,8 +99,8 @@ export default function AdminSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>Content</SidebarGroupLabel>
 
-          <SidebarGroupContent >
-            <SidebarMenu className="flex gap-3">
+          <SidebarGroupContent>
+            <SidebarMenu className="gap-3">
               {contentItems.map((item) => {
                 const Icon = item.icon;
 
@@ -117,34 +127,6 @@ export default function AdminSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-
-        {/* Settings */}
-        <SidebarGroup>
-          <SidebarGroupLabel>Settings</SidebarGroupLabel>
-
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  isActive={pathname.startsWith("/admin/settings")}
-                  className="
-                    hover:bg-[#EBF0FA]
-                    hover:text-[#072069]
-                    data-active:bg-[#EBF0FA]
-                    data-active:text-[#072069]
-                  "
-                  render={
-                    <Link href="/admin/settings">
-                      <Settings />
-                      <span>Company Settings</span>
-                    </Link>
-                  }
-                />
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
       </SidebarContent>
     </Sidebar>
   );

@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { Pencil, Star } from "lucide-react";
+import { CalendarDays, Pencil, User } from "lucide-react";
 
-import { testimonials } from "@/data/testimonials";
+import { blogs } from "@/data/blogs";
 
 import {
   Card,
@@ -10,60 +10,63 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import DeleteTestimonialDialog from "./DeleteTestimonialDialog";
+import DeleteBlogDialog from "@/components/admin/blog/DeleteBlogDialog";
 
-export default function TestimonialList() {
+export default function BlogList() {
   return (
     <Card className="border-[#DADEE7] shadow-sm">
       <CardHeader>
         <CardTitle className="text-lg text-[#0F1729]">
-          All Testimonials
+          All Blog Posts
         </CardTitle>
       </CardHeader>
 
       <CardContent>
         <div className="space-y-4">
-          {testimonials.map((testimonial) => (
+          {blogs.map((post) => (
             <div
-              key={testimonial.id}
+              key={post.id}
               className="
                 flex flex-col gap-4 rounded-xl
-                border border-[#DADEE7] p-4
+                border border-[#DADEE7] p-5
                 transition
                 hover:border-[#0EA5E9]/40
                 hover:bg-[#F8FAFC]
                 sm:flex-row sm:items-center sm:justify-between
               "
             >
-              {/* Testimonial information */}
-              <div className="flex items-start gap-4">
+              {/* Blog information */}
+              <div className="flex min-w-0 gap-4">
                 <img
-                  src={testimonial.avatar}
-                  alt={testimonial.clientName}
-                  className="size-14 shrink-0 rounded-full object-cover"
+                  src={post.image}
+                  alt={post.title}
+                  className="size-20 shrink-0 rounded-lg object-cover"
                 />
 
                 <div className="min-w-0">
-                  <h3 className="font-semibold text-[#0F1729]">
-                    {testimonial.clientName}
-                  </h3>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="font-semibold text-[#0F1729]">
+                      {post.title}
+                    </h3>
 
-                  <p className="text-sm text-[#676F7E]">
-                    {testimonial.role} · {testimonial.companyName}
-                  </p>
-
-                  <p className="mt-2 line-clamp-2 max-w-2xl text-sm text-[#676F7E]">
-                    {testimonial.message}
-                  </p>
-
-                  <div className="mt-2 flex flex-wrap items-center gap-2">
                     <span className="rounded-full bg-[#EBF0FA] px-2.5 py-1 text-xs font-medium text-[#072069]">
-                      {testimonial.productName}
+                      {post.category}
+                    </span>
+                  </div>
+
+                  <p className="mt-1 line-clamp-2 max-w-2xl text-sm leading-6 text-[#676F7E]">
+                    {post.excerpt}
+                  </p>
+
+                  <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-[#676F7E]">
+                    <span className="flex items-center gap-1.5">
+                      <User className="size-3.5 text-[#0EA5E9]" />
+                      {post.author}
                     </span>
 
-                    <span className="flex items-center gap-1 text-xs font-medium text-[#F59E0B]">
-                      <Star className="size-3.5 fill-current" />
-                      {testimonial.rating}/5
+                    <span className="flex items-center gap-1.5">
+                      <CalendarDays className="size-3.5 text-[#0EA5E9]" />
+                      {post.publishedAt}
                     </span>
                   </div>
                 </div>
@@ -72,7 +75,7 @@ export default function TestimonialList() {
               {/* Actions */}
               <div className="flex shrink-0 items-center gap-2">
                 <Link
-                  href={`/admin/testimonials/${testimonial.id}/edit`}
+                  href={`/admin/blog/${post.id}/edit`}
                   className="
                     inline-flex
                     items-center
@@ -96,9 +99,7 @@ export default function TestimonialList() {
                   Edit
                 </Link>
 
-                <DeleteTestimonialDialog
-                  clientName={testimonial.clientName}
-                />
+                <DeleteBlogDialog postTitle={post.title} />
               </div>
             </div>
           ))}

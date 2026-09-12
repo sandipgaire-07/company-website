@@ -3,7 +3,6 @@ import { CalendarDays, MapPin, Pencil } from "lucide-react";
 
 import { jobs } from "@/data/jobs";
 
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -61,17 +60,30 @@ export default function CareerList() {
 
               {/* Actions */}
               <div className="flex shrink-0 items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-[#DADEE7]"
-                  render={
-                    <Link href={`/admin/careers/${job.id}/edit`} />
-                  }
+                <Link
+                  href={`/admin/careers/${job.id}/edit`}
+                  className="
+                    inline-flex
+                    items-center
+                    justify-center
+                    gap-2
+                    rounded-md
+                    border
+                    border-[#DADEE7]
+                    bg-white
+                    px-3
+                    py-2
+                    text-sm
+                    font-medium
+                    text-[#0F1729]
+                    transition-colors
+                    hover:bg-[#F8FAFC]
+                    hover:text-[#072069]
+                  "
                 >
-                  <Pencil />
+                  <Pencil className="size-4" />
                   Edit
-                </Button>
+                </Link>
 
                 <DeleteCareerDialog jobTitle={job.title} />
               </div>

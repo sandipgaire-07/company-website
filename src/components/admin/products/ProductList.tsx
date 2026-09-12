@@ -3,8 +3,8 @@ import { Pencil } from "lucide-react";
 
 import { products } from "@/data/products";
 
-import { Button } from "@/components/ui/button";
 import DeleteProductDialog from "./DeleteDialogProduct";
+
 import {
   Card,
   CardContent,
@@ -26,7 +26,14 @@ export default function ProductList() {
           {products.map((product) => (
             <div
               key={product.id}
-              className="flex flex-col gap-4 rounded-xl border border-[#DADEE7] p-4 transition hover:border-[#0EA5E9]/40 hover:bg-[#F8FAFC] sm:flex-row sm:items-center sm:justify-between"
+              className="
+                flex flex-col gap-4 rounded-xl
+                border border-[#DADEE7] p-4
+                transition
+                hover:border-[#0EA5E9]/40
+                hover:bg-[#F8FAFC]
+                sm:flex-row sm:items-center sm:justify-between
+              "
             >
               {/* Product information */}
               <div className="flex items-center gap-4">
@@ -55,17 +62,30 @@ export default function ProductList() {
 
               {/* Actions */}
               <div className="flex items-center gap-2">
-               <Button
-                    variant="outline"
-                    size="sm"
-                    className="border-[#DADEE7]"
-                    render={
-                        <Link href={`/admin/products/${product.id}/edit`} />
-                    }
-                    >
-                    <Pencil />
-                    Edit
-                    </Button>
+                <Link
+                  href={`/admin/products/${product.id}/edit`}
+                  className="
+                    inline-flex
+                    items-center
+                    justify-center
+                    gap-2
+                    rounded-md
+                    border
+                    border-[#DADEE7]
+                    bg-white
+                    px-3
+                    py-2
+                    text-sm
+                    font-medium
+                    text-[#0F1729]
+                    transition-colors
+                    hover:bg-[#F8FAFC]
+                    hover:text-[#072069]
+                  "
+                >
+                  <Pencil className="size-4" />
+                  Edit
+                </Link>
 
                 <DeleteProductDialog productName={product.name} />
               </div>

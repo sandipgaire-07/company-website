@@ -1,16 +1,29 @@
-import ProductForm from "@/components/admin/products/ProductForm";
-import { Button } from "@base-ui/react";
 import Link from "next/link";
+
+import ProductForm from "@/components/admin/products/ProductForm";
 
 export default function NewProductPage() {
   return (
     <div className="space-y-6">
-            <Button
-  className="p-2 rounded bg-linear-to-r bg-[#072069] text-white hover:opacity-90"
-  render={<Link href="/admin/products" />}
->
-  Back to products
-</Button>
+      <Link
+        href="/admin/products"
+        className="
+          inline-flex
+          items-center
+          rounded-md
+          bg-[#072069]
+          px-4
+          py-2
+          text-sm
+          font-medium
+          text-white
+          transition-colors
+          hover:bg-[#072069]/90
+        "
+      >
+        Back to products
+      </Link>
+
       <div className="mt-4">
         <h1 className="text-2xl font-bold tracking-tight text-[#0F1729]">
           Add Product

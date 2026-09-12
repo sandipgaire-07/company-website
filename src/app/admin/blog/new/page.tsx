@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
-import TestimonialForm from "@/components/admin/testimonials/TestimonialForm";
+import BlogForm from "@/components/admin/blog/BlogForm";
 
-export default function NewTestimonialPage() {
+export default function NewBlogPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
         <Link
-          href="/admin/testimonials"
+          href="/admin/blog"
           className="
             inline-flex
             size-9
@@ -20,23 +20,23 @@ export default function NewTestimonialPage() {
             transition-colors
             hover:bg-[#072069]/90
           "
-          aria-label="Back to testimonials"
+          aria-label="Back to blog"
         >
           <ArrowLeft className="size-4" />
         </Link>
 
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-[#0F1729]">
-            Add Testimonial
+            Add Blog Post
           </h1>
 
           <p className="mt-1 text-sm text-[#676F7E]">
-            Add a new testimonial to your website.
+            Create a new blog post for your website.
           </p>
         </div>
       </div>
 
-      <TestimonialForm />
+      <BlogForm />
     </div>
   );
 }
