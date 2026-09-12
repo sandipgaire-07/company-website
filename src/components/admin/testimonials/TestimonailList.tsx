@@ -1,7 +1,10 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Pencil, Star } from "lucide-react";
 
-import { testimonials } from "@/data/testimonials";
+import { adminGetTestimonials } from "@/actions/admin";
 
 import {
   Card,
@@ -13,6 +16,45 @@ import {
 import DeleteTestimonialDialog from "./DeleteTestimonialDialog";
 
 export default function TestimonialList() {
+  const [list, setList] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  async function loadTestimonials() {
+    setLoading(true);
+
+    const res = await adminGetTestimonials();
+
+    if (res.success && res.data) {
+      setList(res.data);
+    }
+
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    loadTestimonials();
+  }, []);
+
+  if (loading) {
+    return (
+      <Card className="border-[#DADEE7] shadow-sm">
+        <CardContent className="py-10 text-center text-sm text-[#676F7E]">
+          Loading testimonials...
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (list.length === 0) {
+    return (
+      <Card className="border-[#DADEE7] shadow-sm">
+        <CardContent className="py-10 text-center text-sm text-[#676F7E]">
+          No testimonials found. Add your first one.
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="border-[#DADEE7] shadow-sm">
       <CardHeader>
@@ -23,7 +65,7 @@ export default function TestimonialList() {
 
       <CardContent>
         <div className="space-y-4">
-          {testimonials.map((testimonial) => (
+          {list.map((testimonial) => (
             <div
               key={testimonial.id}
               className="
@@ -38,7 +80,10 @@ export default function TestimonialList() {
               {/* Testimonial information */}
               <div className="flex items-start gap-4">
                 <img
-                  src={testimonial.avatar}
+                  src={
+                    testimonial.avatar ||
+                    "/testimonials/client-1.jpg"
+                  }
                   alt={testimonial.clientName}
                   className="size-14 shrink-0 rounded-full object-cover"
                 />
@@ -97,7 +142,9 @@ export default function TestimonialList() {
                 </Link>
 
                 <DeleteTestimonialDialog
+                  id={testimonial.id}
                   clientName={testimonial.clientName}
+                  onDeleted={loadTestimonials}
                 />
               </div>
             </div>

@@ -1,17 +1,43 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, CalendarDays, User } from "lucide-react";
 
-import { blogs } from "@/data/blogs";
+import { getBlogPosts } from "@/actions/content";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function BlogPosts() {
+  const [blogList, setBlogList] = useState<any[]>([]);
+
+
+  useEffect(() => {
+    async function loadBlogs() {
+      const res = await getBlogPosts();
+      if (res.success && res.data) {
+        const mapped = res.data.map((b: any) => ({
+          id: b.id,
+          title: b.title,
+          slug: b.slug,
+          excerpt: b.excerpt || "",
+          image: b.cover_image || b.image || "/blogs/blog-1.webp",
+          author: b.author_name || b.author || "ApexFlow Team",
+          category: b.category || "Technology",
+          publishedAt: b.published_at || b.publishedAt || "Recently",
+        }));
+        setBlogList(mapped);
+      }
+    }
+    loadBlogs();
+  }, []);
+
   return (
     <section className="bg-[#F8FAFC] px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {blogs.map((post) => (
+          {blogList.map((post) => (
             <Card
               key={post.id}
               className="group flex h-full flex-col overflow-hidden border-0 bg-white shadow-sm ring-1 ring-[#DADEE7] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
@@ -64,3 +90,4 @@ export default function BlogPosts() {
     </section>
   );
 }
+

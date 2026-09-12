@@ -17,16 +17,15 @@ import {
 
 type DeleteCareerDialogProps = {
   jobTitle: string;
+  onConfirm?: () => void;
+  isPending?: boolean;
 };
 
 export default function DeleteCareerDialog({
   jobTitle,
+  onConfirm,
+  isPending,
 }: DeleteCareerDialogProps) {
-  function handleDelete() {
-    console.log("Delete job:", jobTitle);
-    // DELETE API will be connected later.
-  }
-
   return (
     <AlertDialog>
       <AlertDialogTrigger
@@ -35,6 +34,7 @@ export default function DeleteCareerDialog({
             type="button"
             variant="ghost"
             size="icon"
+            disabled={isPending}
             className="text-[#676F7E] hover:bg-red-50 hover:text-red-500"
             aria-label={`Delete ${jobTitle}`}
           />
@@ -82,7 +82,7 @@ export default function DeleteCareerDialog({
           </AlertDialogCancel>
 
           <AlertDialogAction
-            onClick={handleDelete}
+            onClick={onConfirm}
             className="bg-red-500 text-white hover:bg-red-600"
           >
             Delete Job

@@ -2,11 +2,14 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ImagePlus, X } from "lucide-react";
+import { ImagePlus, Loader2, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
+import { adminCreateTestimonial, adminUpdateTestimonial } from "@/actions/admin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -45,12 +48,8 @@ const testimonialSchema = z.object({
     .min(1, "Rating must be at least 1.")
     .max(5, "Rating cannot be more than 5."),
 
-  avatar: z
-    .instanceof(File)
-    .optional(),
+  avatar: z.any().optional(),
 });
-
-type TestimonialFormValues = z.infer<typeof testimonialSchema>;
 
 type TestimonialFormProps = {
   testimonial?: Testimonial;
@@ -59,18 +58,19 @@ type TestimonialFormProps = {
 export default function TestimonialForm({
   testimonial,
 }: TestimonialFormProps) {
+  const router = useRouter();
   const [imagePreview, setImagePreview] = useState<string | null>(
     testimonial?.avatar ?? null
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
     setValue,
     handleSubmit,
     formState: { errors },
-  } = useForm<TestimonialFormValues>({
+  } = useForm({
     resolver: zodResolver(testimonialSchema),
-
     defaultValues: {
       clientName: testimonial?.clientName ?? "",
       companyName: testimonial?.companyName ?? "",
@@ -81,17 +81,10 @@ export default function TestimonialForm({
     },
   });
 
-  function handleImageChange(
-    event: React.ChangeEvent<HTMLInputElement>
-  ) {
+  function handleImageChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
-
     if (!file) return;
-
-    setValue("avatar", file, {
-      shouldValidate: true,
-    });
-
+    setValue("avatar", file, { shouldValidate: true });
     setImagePreview(URL.createObjectURL(file));
   }
 
@@ -100,10 +93,39 @@ export default function TestimonialForm({
     setImagePreview(testimonial?.avatar ?? null);
   }
 
-  function onSubmit(values: TestimonialFormValues){
-    console.log("Testimonial:", values);
+  async function onSubmit(values: z.infer<typeof testimonialSchema>) {
+    setIsSubmitting(true);
+    try {
+      const payload = {
+        clientName: values.clientName,
+        companyName: values.companyName,
+        role: values.role,
+        message: values.message,
+        avatar: typeof values.avatar === "string" ? values.avatar : (imagePreview ?? ""),
+        productName: values.productName,
+        rating: Number(values.rating),
+      };
 
-    // API will be connected later.
+      let result;
+      if (testimonial?.id) {
+        result = await adminUpdateTestimonial(testimonial.id, payload);
+      } else {
+        result = await adminCreateTestimonial(payload);
+      }
+
+      if (!result.success) {
+        toast.error(result.error ?? "Something went wrong.");
+        return;
+      }
+
+      toast.success(
+        testimonial ? "Testimonial updated successfully." : "Testimonial added successfully."
+      );
+      router.push("/admin/testimonials");
+      router.refresh();
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -114,7 +136,6 @@ export default function TestimonialForm({
           <h2 className="text-xl font-semibold text-[#0F1729]">
             Client Information
           </h2>
-
           <p className="mt-1 text-sm text-[#676F7E]">
             Add the basic information about the client.
           </p>
@@ -132,13 +153,11 @@ export default function TestimonialForm({
               >
                 Client Name
               </label>
-
               <Input
                 id="clientName"
                 placeholder="John Doe"
                 {...register("clientName")}
               />
-
               {errors.clientName && (
                 <p className="text-sm text-red-500">
                   {errors.clientName.message}
@@ -154,13 +173,11 @@ export default function TestimonialForm({
               >
                 Company Name
               </label>
-
               <Input
                 id="companyName"
                 placeholder="ABC Company"
                 {...register("companyName")}
               />
-
               {errors.companyName && (
                 <p className="text-sm text-red-500">
                   {errors.companyName.message}
@@ -178,13 +195,11 @@ export default function TestimonialForm({
               >
                 Role
               </label>
-
               <Input
                 id="role"
                 placeholder="CEO"
                 {...register("role")}
               />
-
               {errors.role && (
                 <p className="text-sm text-red-500">
                   {errors.role.message}
@@ -200,13 +215,11 @@ export default function TestimonialForm({
               >
                 Product
               </label>
-
               <Input
                 id="productName"
                 placeholder="ApexFlow RestroCloud"
                 {...register("productName")}
               />
-
               {errors.productName && (
                 <p className="text-sm text-red-500">
                   {errors.productName.message}
@@ -223,7 +236,6 @@ export default function TestimonialForm({
           <h2 className="text-xl font-semibold text-[#0F1729]">
             Testimonial
           </h2>
-
           <p className="mt-1 text-sm text-[#676F7E]">
             Add the client&apos;s testimonial and rating.
           </p>
@@ -240,14 +252,12 @@ export default function TestimonialForm({
             >
               Testimonial Message
             </label>
-
             <Textarea
               id="message"
               rows={6}
               placeholder="Write the client's testimonial..."
               {...register("message")}
             />
-
             {errors.message && (
               <p className="text-sm text-red-500">
                 {errors.message.message}
@@ -263,7 +273,6 @@ export default function TestimonialForm({
             >
               Rating
             </label>
-
             <Input
               id="rating"
               type="number"
@@ -272,7 +281,6 @@ export default function TestimonialForm({
               step={1}
               {...register("rating")}
             />
-
             {errors.rating && (
               <p className="text-sm text-red-500">
                 {errors.rating.message}
@@ -288,7 +296,6 @@ export default function TestimonialForm({
           <h2 className="text-xl font-semibold text-[#0F1729]">
             Client Avatar
           </h2>
-
           <p className="mt-1 text-sm text-[#676F7E]">
             Upload a profile image for the testimonial.
           </p>
@@ -332,9 +339,9 @@ export default function TestimonialForm({
               </Button>
             )}
 
-            {errors.avatar && (
+            {errors.avatar?.message && (
               <p className="text-sm text-red-500">
-                {errors.avatar.message}
+                {String(errors.avatar.message)}
               </p>
             )}
           </div>
@@ -346,9 +353,17 @@ export default function TestimonialForm({
         <Button
           type="submit"
           size="lg"
+          disabled={isSubmitting}
           className="bg-[#072069] text-white hover:bg-[#072069]/90"
         >
-          {testimonial ? "Update Testimonial" : "Save Testimonial"}
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 size-4 animate-spin" />
+              {testimonial ? "Updating..." : "Saving..."}
+            </>
+          ) : (
+            testimonial ? "Update Testimonial" : "Save Testimonial"
+          )}
         </Button>
       </div>
     </form>

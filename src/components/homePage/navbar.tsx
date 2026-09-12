@@ -21,11 +21,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { products } from "@/data/products";
+import { products as staticProducts } from "@/data/products";
+import { getProducts } from "@/actions/content";
 
 const navItems = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
+  { label: "Careers", href: "/career" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -40,8 +42,19 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
+  const [productList, setProductList] = useState<any[]>(staticProducts);
 
   const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    async function loadNavProducts() {
+      const res = await getProducts();
+      if (res.success && res.data && res.data.length > 0) {
+        setProductList(res.data);
+      }
+    }
+    loadNavProducts();
+  }, []);
 
   const handleProductsEnter = () => {
     if (closeTimeout.current) {
@@ -70,15 +83,18 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[#DADEE7] bg-white/95 backdrop-blur">
-      <nav className="mx-auto flex h-18 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-md transition-all shadow-xs">
+      <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link
           href="/"
           onClick={closeMobileMenu}
-          className="text-xl font-bold tracking-tight text-[#072069]"
+          className="group flex items-center gap-2 text-2xl font-extrabold tracking-tight text-[#072069]"
         >
-          leafClutch
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-[#072069] to-[#0EA5E9] text-white shadow-md shadow-[#0EA5E9]/20 transition-transform group-hover:scale-105">
+            N
+          </span>
+          <span>NCT<span className="text-[#0EA5E9]">SOFT</span></span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -132,8 +148,8 @@ export default function Navbar() {
     </p>
   </div>
 
-  {products.map((product) => {
-    const Icon = iconMap[product.category as keyof typeof iconMap];
+  {productList.map((product) => {
+    const Icon = iconMap[product.category as keyof typeof iconMap] || Building2;
 
     return (
       <DropdownMenuItem
@@ -274,8 +290,8 @@ export default function Navbar() {
         </p>
       </div>
 
-      {products.map((product) => {
-         const Icon = iconMap[product.category as keyof typeof iconMap];
+      {productList.map((product) => {
+        const Icon = iconMap[product.category as keyof typeof iconMap] || Building2;
 
         return (
           <Link

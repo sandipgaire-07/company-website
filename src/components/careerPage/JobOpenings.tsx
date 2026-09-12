@@ -1,7 +1,10 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { CalendarDays, MapPin, ArrowRight } from "lucide-react";
 
-import { jobs } from "@/data/jobs";
+import { getJobPostings } from "@/actions/content";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,6 +14,27 @@ import {
 } from "@/components/ui/card";
 
 export default function JobOpenings() {
+  const [jobList, setJobList] = useState<any[]>([]);
+
+
+  useEffect(() => {
+    async function loadJobs() {
+      const res = await getJobPostings();
+      if (res.success && res.data) {
+        const mapped = res.data.map((j: any) => ({
+          id: j.id,
+          title: j.title,
+          slug: j.slug || j.title.toLowerCase().replace(/\s+/g, "-"),
+          description: j.description,
+          location: j.location || "Remote",
+          applicationDeadline: j.applicationDeadline || j.application_deadline || "Open Until Filled",
+        }));
+        setJobList(mapped);
+      }
+    }
+    loadJobs();
+  }, []);
+
   return (
     <section className="bg-[#F8FAFC] px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
       <div className="mx-auto max-w-7xl">
@@ -30,9 +54,9 @@ export default function JobOpenings() {
         
         </div>
 
-        {jobs.length > 0 ? (
+        {jobList.length > 0 ? (
           <div className="mt-10 grid gap-6 lg:grid-cols-3">
-            {jobs.map((job) => (
+            {jobList.map((job) => (
               <Card
                 key={job.id}
                 className="group relative flex h-full flex-col overflow-hidden border-0 bg-white shadow-sm ring-1 ring-[#DADEE7] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
@@ -86,3 +110,4 @@ export default function JobOpenings() {
     </section>
   );
 }
+

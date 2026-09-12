@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 import ProductForm from "@/components/admin/products/ProductForm";
 
@@ -10,17 +11,19 @@ export default function NewProductPage() {
         className="
           inline-flex
           items-center
-          rounded-md
+          gap-2
+          rounded-lg
           bg-[#072069]
           px-4
           py-2
           text-sm
-          font-medium
+          font-semibold
           text-white
-          transition-colors
-          hover:bg-[#072069]/90
+          transition-opacity
+          hover:opacity-90
         "
       >
+        <ArrowLeft className="size-4" />
         Back to products
       </Link>
 
@@ -30,7 +33,7 @@ export default function NewProductPage() {
         </h1>
 
         <p className="mt-1 text-sm text-[#676F7E]">
-          Add a new product to your website.
+          Add a new product to your website database.
         </p>
       </div>
 

@@ -7,6 +7,7 @@ import {
   FileText,
   Handshake,
   HelpCircle,
+  Inbox,
   LayoutDashboard,
   MessageSquare,
   Package,
@@ -26,6 +27,7 @@ import {
 } from "@/components/ui/sidebar";
 
 const contentItems = [
+  { title: "Submissions", href: "/admin/submissions", icon: Inbox },
   { title: "Products", href: "/admin/products", icon: Package },
   { title: "Services", href: "/admin/services", icon: Wrench },
   {
@@ -47,6 +49,7 @@ const contentItems = [
     icon: Building2,
   },
 ];
+
 
 export default function AdminSidebar() {
   const pathname = usePathname();

@@ -9,7 +9,13 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { adminCreateService, adminUpdateService } from "@/actions/admin";
+
 const serviceSchema = z.object({
+  id: z.string().optional(),
   title: z.string().trim().min(2, "Please enter the service title."),
   description: z
     .string()
@@ -34,10 +40,13 @@ export type ServiceFormInput = z.input<typeof serviceSchema>;
 export type ServiceFormValues = z.output<typeof serviceSchema>;
 
 type ServiceFormProps = {
-  service?: ServiceFormValues;
+  service?: ServiceFormValues & { id?: string };
 };
 
 export default function ServiceForm({ service }: ServiceFormProps) {
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const {
     register,
     control,
@@ -48,6 +57,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
 
     defaultValues: service
       ? {
+          id: service.id,
           title: service.title,
           description: service.description,
           slug: service.slug,
@@ -80,9 +90,28 @@ export default function ServiceForm({ service }: ServiceFormProps) {
     name: "features",
   });
 
-  function onSubmit(values: ServiceFormValues) {
-    console.log("Service:", values);
-    // API will be connected later.
+  async function onSubmit(values: ServiceFormValues) {
+    setIsSubmitting(true);
+    try {
+      let result;
+      if (service?.id) {
+        result = await adminUpdateService(service.id, values);
+      } else {
+        result = await adminCreateService(values);
+      }
+
+      if (result.success) {
+        toast.success(service ? "Service updated successfully!" : "Service created successfully!");
+        router.push("/admin/services");
+        router.refresh();
+      } else {
+        toast.error(result.error || "Failed to save service.");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "An unexpected error occurred.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -342,9 +371,14 @@ export default function ServiceForm({ service }: ServiceFormProps) {
         <Button
           type="submit"
           size="lg"
-          className="bg-linear-to-r bg-[#072069]  text-white hover:opacity-90"
+          disabled={isSubmitting}
+          className="bg-linear-to-r bg-[#072069] text-white hover:opacity-90 disabled:opacity-50"
         >
-          {service ? "Update Service" : "Save Service"}
+          {isSubmitting
+            ? "Saving..."
+            : service
+            ? "Update Service"
+            : "Save Service"}
         </Button>
       </div>
     </form>

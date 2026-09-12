@@ -4,6 +4,7 @@ import {
   FileText,
   Handshake,
   HelpCircle,
+  Inbox,
   MessageSquare,
   Package,
   Wrench,
@@ -68,6 +69,21 @@ const overviewItems = [
     href: "/admin/collaborations",
     icon: Handshake,
     color: "#14B8A6",
+  },
+];
+
+const quickActions = [
+  {
+    title: "Add Product",
+    href: "/admin/products/new",
+  },
+  {
+    title: "Add Service",
+    href: "/admin/services/new",
+  },
+  {
+    title: "Add Blog Post",
+    href: "/admin/blog/new",
   },
 ];
 
@@ -147,33 +163,40 @@ export default function DashboardOverview() {
           </p>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          <Link
-            href="/admin/products/new"
-            className="
-              inline-flex
-              items-center
-              justify-center
-              rounded-md
-              bg-[#072069]
-              px-4
-              py-3
-              text-sm
-              font-medium
-              text-white
-              transition-colors
-              hover:bg-[#072069]/90
-            "
-          >
-            Add Product
-          </Link>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {quickActions.map((action, index) => (
+            <Link
+              key={action.href}
+              href={action.href}
+              className={`
+                inline-flex
+                items-center
+                justify-center
+                rounded-md
+                px-4
+                py-3
+                text-sm
+                font-medium
+                transition-colors
+                ${
+                  index === 0
+                    ? "bg-[#072069] text-white hover:bg-[#072069]/90"
+                    : "border border-[#DADEE7] bg-white text-[#0F1729] hover:bg-[#F8FAFC]"
+                }
+              `}
+            >
+              {action.title}
+            </Link>
+          ))}
 
+          {/* Submissions */}
           <Link
-            href="/admin/services/new"
+            href="/admin/submissions"
             className="
               inline-flex
               items-center
               justify-center
+              gap-2
               rounded-md
               border
               border-[#DADEE7]
@@ -187,29 +210,8 @@ export default function DashboardOverview() {
               hover:bg-[#F8FAFC]
             "
           >
-            Add Service
-          </Link>
-
-          <Link
-            href="/admin/blog/new"
-            className="
-              inline-flex
-              items-center
-              justify-center
-              rounded-md
-              border
-              border-[#DADEE7]
-              bg-white
-              px-4
-              py-3
-              text-sm
-              font-medium
-              text-[#0F1729]
-              transition-colors
-              hover:bg-[#F8FAFC]
-            "
-          >
-            Add Blog Post
+            <Inbox className="size-4 text-[#0EA5E9]" />
+            View Submissions
           </Link>
         </div>
       </div>

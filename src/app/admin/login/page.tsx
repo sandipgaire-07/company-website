@@ -1,14 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { Eye, EyeOff, ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Eye, EyeOff, ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { adminLogin } from "@/actions/auth";
 
 const loginSchema = z.object({
   email: z.string().trim().email("Please enter a valid email address."),
@@ -18,7 +21,10 @@ const loginSchema = z.object({
 type LoginValues = z.infer<typeof loginSchema>;
 
 export default function AdminLoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const {
     register,
@@ -34,9 +40,24 @@ export default function AdminLoginPage() {
     },
   });
 
-  function onSubmit(values: LoginValues) {
-    console.log(values);
-    // Supabase authentication will be added later.
+  async function onSubmit(values: LoginValues) {
+    setIsSubmitting(true);
+    setErrorMsg(null);
+
+    try {
+      const res = await adminLogin(values);
+      if (res.success) {
+        toast.success("Successfully authenticated as Admin.");
+        router.push("/admin");
+        router.refresh();
+      } else {
+        setErrorMsg(res.error || "Invalid email or password.");
+      }
+    } catch (err: any) {
+      setErrorMsg(err.message || "An unexpected error occurred.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -73,6 +94,12 @@ export default function AdminLoginPage() {
 
         {/* Login Card */}
         <div className="rounded-3xl border border-[#DADEE7] bg-white p-6 shadow-sm sm:p-8">
+          {errorMsg && (
+            <div className="mb-4 p-3 text-sm rounded-xl bg-red-50 text-red-600 border border-red-200">
+              {errorMsg}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             {/* Email */}
             <div className="space-y-2">
@@ -143,9 +170,17 @@ export default function AdminLoginPage() {
             {/* Login */}
             <Button
               type="submit"
-              className="h-auto w-full rounded-md bg-[#072069] py-3 text-white shadow-md shadow-[#0EA5E9]/20 transition-all hover:-translate-y-0.5 hover:shadow-lg"
+              disabled={isSubmitting}
+              className="h-auto w-full rounded-md bg-[#072069] py-3 text-white shadow-md shadow-[#0EA5E9]/20 transition-all hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50"
             >
-              Sign In
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin inline" />
+                  Signing In...
+                </>
+              ) : (
+                "Sign In"
+              )}
             </Button>
           </form>
         </div>

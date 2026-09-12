@@ -1,10 +1,13 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Plus, Trash2 } from "lucide-react";
 
+import { adminCreateJob, adminUpdateJob } from "@/actions/admin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -54,9 +57,14 @@ type CareerFormValues = z.infer<typeof careerSchema>;
 
 type CareerFormProps = {
   job?: Job;
+  jobId?: string;
 };
 
-export default function CareerForm({ job }: CareerFormProps) {
+export default function CareerForm({ job, jobId }: CareerFormProps) {
+  const router = useRouter();
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
   const {
     register,
     control,
@@ -90,6 +98,7 @@ export default function CareerForm({ job }: CareerFormProps) {
         },
   });
 
+
   const {
     fields: responsibilityFields,
     append: appendResponsibility,
@@ -117,15 +126,30 @@ export default function CareerForm({ job }: CareerFormProps) {
     name: "qualifications",
   });
 
-  function onSubmit(values: CareerFormValues) {
-    console.log("Job:", {
+  async function onSubmit(values: CareerFormValues) {
+    setSubmitting(true);
+    setServerError(null);
+
+    const payload = {
       ...values,
       responsibilities: values.responsibilities.map(({ value }) => value),
       requirements: values.requirements.map(({ value }) => value),
       qualifications: values.qualifications.map(({ value }) => value),
-    });
+    };
 
-    // API will be connected later.
+    const res = jobId
+      ? await adminUpdateJob(jobId, payload)
+      : await adminCreateJob(payload);
+
+    setSubmitting(false);
+
+    if (!res.success) {
+      setServerError(res.error || "Something went wrong. Please try again.");
+      return;
+    }
+
+    router.push("/admin/careers");
+    router.refresh();
   }
 
   return (
@@ -450,15 +474,23 @@ export default function CareerForm({ job }: CareerFormProps) {
       </section>
 
       {/* Submit */}
-      <div className="flex justify-end">
-        <Button
-          type="submit"
-          size="lg"
-          className="bg-[#072069] text-white hover:bg-[#072069]/90"
-        >
-          {job ? "Update Job" : "Save Job"}
-        </Button>
+      <div className="flex flex-col gap-3">
+        {serverError && (
+          <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600 ring-1 ring-red-200">
+            {serverError}
+          </p>
+        )}
+        <div className="flex justify-end">
+          <Button
+            type="submit"
+            size="lg"
+            disabled={submitting}
+            className="bg-[#072069] text-white hover:bg-[#072069]/90"
+          >
+            {submitting ? "Saving…" : job ? "Update Job" : "Save Job"}
+          </Button>
+        </div>
       </div>
     </form>
   );
-}
+}

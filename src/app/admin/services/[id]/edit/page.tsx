@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
-import { serviceDetails } from "@/data/services/serviceDetails";
+import { adminGetServiceById } from "@/actions/admin";
 import ServiceForm from "@/components/admin/services/ServiceForm";
 
 type EditServicePageProps = {
@@ -14,9 +14,9 @@ export default async function EditServicePage({
 }: EditServicePageProps) {
   const { id } = await params;
 
-  const service = serviceDetails.find(
-    (service) => service.id === id
-  );
+  const res = await adminGetServiceById(id);
+
+  const service = res.success && res.data ? res.data : null;
 
   if (!service) {
     notFound();

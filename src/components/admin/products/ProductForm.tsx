@@ -1,8 +1,12 @@
-﻿"use client";
+"use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 import ProductBasicInformation from "./ProductBasicInformation";
 import ProductStats from "./ProductStats";
@@ -10,7 +14,10 @@ import ProductFeatures from "./ProductFeatures";
 import ProductPricing from "./ProductPricing";
 
 import { Button } from "@/components/ui/button";
+import { adminCreateProduct, adminUpdateProduct } from "@/actions/admin";
 import type { ProductDetails } from "@/types/productDetails";
+
+
 
 export const productSchema = z.object({
   name: z.string().trim().min(2, "Please enter the product name."),
@@ -185,8 +192,35 @@ export default function ProductForm({ product }: ProductFormProps) {
     name: "pricing",
   });
 
-  function onSubmit(values: ProductFormValues) {
-    console.log("Product:", values);
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+
+
+  async function onSubmit(values: ProductFormValues) {
+    setIsSubmitting(true);
+    try {
+      let result;
+      if (product?.id || product?.slug) {
+        // Always prefer exact UUID id first so editing the slug doesn't break subsequent updates
+        const targetId = product.id || product.slug;
+        result = await adminUpdateProduct(targetId, values);
+      } else {
+        result = await adminCreateProduct(values);
+      }
+
+      if (result.success) {
+        toast.success(product ? "Product updated successfully!" : "Product created successfully!");
+        router.push("/admin/products");
+        router.refresh();
+      } else {
+        toast.error(result.error || "Failed to save product.");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "An unexpected error occurred.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -222,12 +256,21 @@ export default function ProductForm({ product }: ProductFormProps) {
       <div className="flex justify-end">
         <Button
           type="submit"
+          disabled={isSubmitting}
           size="lg"
-          className="bg-linear-to-r bg-[#072069] text-white hover:opacity-90"
+          className="bg-[#072069] text-white hover:opacity-90 disabled:opacity-50"
         >
-          {product ? "Update Product" : "Save Product"}
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              {product ? "Updating..." : "Saving..."}
+            </>
+          ) : (
+            <>{product ? "Update Product" : "Save Product"}</>
+          )}
         </Button>
       </div>
     </form>
   );
+
 }

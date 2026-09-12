@@ -2,25 +2,27 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
-import { blogs } from "@/data/blogs";
+import { adminGetBlogPostBySlug } from "@/actions/admin";
 import BlogForm from "@/components/admin/blog/BlogForm";
 
-type EditBlogPageProps = {
+type EditBlogPostPageProps = {
   params: Promise<{
     id: string;
   }>;
 };
 
-export default async function EditBlogPage({
+export default async function EditBlogPostPage({
   params,
-}: EditBlogPageProps) {
+}: EditBlogPostPageProps) {
   const { id } = await params;
 
-  const blog = blogs.find((post) => post.id === id);
+  const res = await adminGetBlogPostBySlug(id);
 
-  if (!blog) {
+  if (!res.success || !res.data) {
     notFound();
   }
+
+  const post = res.data;
 
   return (
     <div className="space-y-6">
@@ -49,12 +51,13 @@ export default async function EditBlogPage({
           </h1>
 
           <p className="mt-1 text-sm text-[#676F7E]">
-            Update the blog post information.
+            Editing:{" "}
+            <span className="font-medium">{post.title}</span>
           </p>
         </div>
       </div>
 
-      <BlogForm blog={blog} />
+      <BlogForm post={post} postId={post.id} />
     </div>
   );
 }

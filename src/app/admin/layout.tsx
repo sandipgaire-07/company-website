@@ -1,6 +1,7 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminHeader from "@/components/admin/AdminHeader";
+import { Toaster } from "sonner";
 
 export default function AdminLayout({
   children,
@@ -12,14 +13,13 @@ export default function AdminLayout({
       <AdminSidebar />
 
       <main className="min-h-screen flex-1">
-        <div className="border-b border-[#DADEE7] px-4 py-3">
-        <AdminHeader/>
-        </div>
+        <AdminHeader />
 
         <div className="p-4 sm:p-6 lg:p-8">
           {children}
         </div>
       </main>
+      <Toaster richColors position="top-right" />
     </SidebarProvider>
   );
 }

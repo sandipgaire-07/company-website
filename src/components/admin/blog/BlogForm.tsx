@@ -1,96 +1,159 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import Image from "next/image";
+import { Upload, X, Loader2 } from "lucide-react";
+
+import {
+  adminCreateBlogPost,
+  adminUpdateBlogPost,
+} from "@/actions/admin";
+import { uploadImageAction } from "@/actions/upload";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 
-import type { BlogPost } from "@/types/blog";
-
 const blogSchema = z.object({
-  title: z.string().trim().min(2, "Please enter the blog title."),
-
-  slug: z.string().trim().min(2, "Please enter the blog slug."),
-
-  category: z.string().trim().min(2, "Please enter the category."),
-
+  title: z.string().trim().min(3, "Please enter the post title."),
+  slug: z.string().trim().min(2, "Please enter the URL slug."),
+  category: z.string().trim().min(2, "Please enter a category."),
+  author_name: z
+    .string()
+    .trim()
+    .min(2, "Please enter the author name."),
   excerpt: z
     .string()
     .trim()
-    .min(10, "Please enter at least 10 characters."),
-
+    .min(10, "Please enter an excerpt (at least 10 chars)."),
+  cover_image: z.string().trim().optional(),
   content: z
     .string()
     .trim()
-    .min(20, "Please enter the blog content."),
-
-  image: z.string().trim().min(1, "Please enter the image path."),
-
-  author: z.string().trim().min(2, "Please enter the author name."),
-
-  publishedAt: z
-    .string()
-    .trim()
-    .min(2, "Please enter the published date."),
+    .min(20, "Please enter the post content (at least 20 chars)."),
 });
 
 type BlogFormValues = z.infer<typeof blogSchema>;
 
 type BlogFormProps = {
-  blog?: BlogPost;
+  post?: {
+    id?: string;
+    title: string;
+    slug: string;
+    category: string;
+    author: string;
+    excerpt: string;
+    image?: string;
+    content?: string | string[];
+  };
+  postId?: string;
 };
 
-export default function BlogForm({ blog }: BlogFormProps) {
+export default function BlogForm({ post, postId }: BlogFormProps) {
+  const router = useRouter();
+
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+
+  const contentValue = Array.isArray(post?.content)
+    ? post.content.join("\n\n")
+    : post?.content || "";
+
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<BlogFormValues>({
     resolver: zodResolver(blogSchema),
 
-    defaultValues: {
-      title: blog?.title ?? "",
-      slug: blog?.slug ?? "",
-      category: blog?.category ?? "",
-      excerpt: blog?.excerpt ?? "",
-      content: blog?.content?.join("\n\n") ?? "",
-      image: blog?.image ?? "",
-      author: blog?.author ?? "",
-      publishedAt: blog?.publishedAt ?? "",
-    },
+    defaultValues: post
+      ? {
+          title: post.title,
+          slug: post.slug,
+          category: post.category,
+          author_name: post.author,
+          excerpt: post.excerpt,
+          cover_image: post.image || "",
+          content: contentValue,
+        }
+      : {
+          title: "",
+          slug: "",
+          category: "",
+          author_name: "",
+          excerpt: "",
+          cover_image: "",
+          content: "",
+        },
   });
 
-  function onSubmit(values: BlogFormValues) {
-    const content = values.content
-      .split("\n\n")
-      .map((paragraph) => paragraph.trim())
-      .filter(Boolean);
+  const coverImageValue = watch("cover_image");
 
-    const blogData = {
-      ...values,
-      content,
-    };
+  async function handleImageUpload(
+    e: React.ChangeEvent<HTMLInputElement>
+  ) {
+    const file = e.target.files?.[0];
 
-    console.log("Blog:", blogData);
+    if (!file) return;
 
-    // API will be connected later.
+    setUploadingImage(true);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await uploadImageAction(formData);
+
+    setUploadingImage(false);
+
+    if (res.success && res.data) {
+      setValue("cover_image", res.data, {
+        shouldValidate: true,
+      });
+    } else {
+      alert(res.error || "Failed to upload image.");
+    }
+  }
+
+  async function onSubmit(values: BlogFormValues) {
+    setSubmitting(true);
+    setServerError(null);
+
+    const res = postId
+      ? await adminUpdateBlogPost(postId, values)
+      : await adminCreateBlogPost(values);
+
+    setSubmitting(false);
+
+    if (!res.success) {
+      setServerError(
+        res.error || "Something went wrong. Please try again."
+      );
+      return;
+    }
+
+    router.push("/admin/blog");
+    router.refresh();
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-      {/* Basic Information */}
+      {/* Post Details */}
       <section className="rounded-2xl border border-[#DADEE7] bg-white p-6 shadow-sm">
         <div>
           <h2 className="text-xl font-semibold text-[#0F1729]">
-            Blog Information
+            Post Details
           </h2>
 
           <p className="mt-1 text-sm text-[#676F7E]">
-            Add the basic information for your blog post.
+            Basic information for this blog post.
           </p>
         </div>
 
@@ -109,7 +172,7 @@ export default function BlogForm({ blog }: BlogFormProps) {
 
               <Input
                 id="title"
-                placeholder="Building Better Digital Workflows for Growing Businesses"
+                placeholder="How We Built NCT SOFT"
                 {...register("title")}
               />
 
@@ -130,7 +193,7 @@ export default function BlogForm({ blog }: BlogFormProps) {
 
               <Input
                 id="slug"
-                placeholder="building-better-digital-workflows"
+                placeholder="how-we-built-nct-soft"
                 {...register("slug")}
               />
 
@@ -154,7 +217,7 @@ export default function BlogForm({ blog }: BlogFormProps) {
 
               <Input
                 id="category"
-                placeholder="Business Technology"
+                placeholder="Engineering"
                 {...register("category")}
               />
 
@@ -167,68 +230,110 @@ export default function BlogForm({ blog }: BlogFormProps) {
 
             <div className="space-y-2">
               <label
-                htmlFor="author"
+                htmlFor="author_name"
                 className="text-sm font-medium text-[#0F1729]"
               >
                 Author
               </label>
 
               <Input
-                id="author"
-                placeholder="LeafClutch Team"
-                {...register("author")}
+                id="author_name"
+                placeholder="NCT SOFT Team"
+                {...register("author_name")}
               />
 
-              {errors.author && (
+              {errors.author_name && (
                 <p className="text-sm text-red-500">
-                  {errors.author.message}
+                  {errors.author_name.message}
                 </p>
               )}
             </div>
           </div>
 
-          {/* Published Date + Image */}
-          <div className="grid gap-5 sm:grid-cols-2">
-            <div className="space-y-2">
-              <label
-                htmlFor="publishedAt"
-                className="text-sm font-medium text-[#0F1729]"
-              >
-                Published Date
-              </label>
+          {/* Cover Image */}
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-[#0F1729]">
+              Cover Image
+            </label>
 
-              <Input
-                id="publishedAt"
-                placeholder="September 5, 2026"
-                {...register("publishedAt")}
-              />
+            <div className="rounded-xl border border-dashed border-[#DADEE7] p-4">
+              {coverImageValue ? (
+                <div className="relative overflow-hidden rounded-lg">
+                  <Image
+                    src={coverImageValue}
+                    alt="Cover preview"
+                    width={900}
+                    height={500}
+                    className="h-56 w-full rounded-lg object-cover"
+                  />
 
-              {errors.publishedAt && (
-                <p className="text-sm text-red-500">
-                  {errors.publishedAt.message}
-                </p>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    onClick={() =>
+                      setValue("cover_image", "")
+                    }
+                    className="absolute right-3 top-3"
+                    aria-label="Remove image"
+                  >
+                    <X className="size-4" />
+                  </Button>
+                </div>
+              ) : (
+                <label
+                  htmlFor="blog-cover-image"
+                  className="
+                    flex cursor-pointer flex-col
+                    items-center justify-center
+                    rounded-lg px-6 py-8
+                    text-center transition
+                    hover:bg-[#F8FAFC]
+                  "
+                >
+                  {uploadingImage ? (
+                    <Loader2 className="size-8 animate-spin text-[#072069]" />
+                  ) : (
+                    <div className="flex size-12 items-center justify-center rounded-full bg-[#EBF0FA] text-[#072069]">
+                      <Upload className="size-5" />
+                    </div>
+                  )}
+
+                  <p className="mt-3 text-sm font-medium text-[#0F1729]">
+                    {uploadingImage
+                      ? "Uploading image..."
+                      : "Click to upload cover image"}
+                  </p>
+
+                  <p className="mt-1 text-xs text-[#676F7E]">
+                    PNG, JPG, WEBP or GIF
+                  </p>
+
+                  <input
+                    id="blog-cover-image"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    disabled={uploadingImage}
+                    onChange={handleImageUpload}
+                  />
+                </label>
               )}
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1">
               <label
-                htmlFor="image"
-                className="text-sm font-medium text-[#0F1729]"
+                htmlFor="cover_image"
+                className="text-xs text-[#676F7E]"
               >
-                Image
+                Or enter image URL directly:
               </label>
 
               <Input
-                id="image"
-                placeholder="/blog/workflows.webp"
-                {...register("image")}
+                id="cover_image"
+                placeholder="https://example.com/image.jpg"
+                {...register("cover_image")}
               />
-
-              {errors.image && (
-                <p className="text-sm text-red-500">
-                  {errors.image.message}
-                </p>
-              )}
             </div>
           </div>
 
@@ -265,7 +370,8 @@ export default function BlogForm({ blog }: BlogFormProps) {
           </h2>
 
           <p className="mt-1 text-sm text-[#676F7E]">
-            Separate paragraphs with an empty line.
+            Write the full blog content here. Separate paragraphs with
+            an empty line.
           </p>
         </div>
 
@@ -302,14 +408,27 @@ Continue with the next paragraph.`}
       </section>
 
       {/* Submit */}
-      <div className="flex justify-end">
-        <Button
-          type="submit"
-          size="lg"
-          className="bg-[#072069] text-white hover:bg-[#072069]/90"
-        >
-          {blog ? "Update Post" : "Save Post"}
-        </Button>
+      <div className="flex flex-col gap-3">
+        {serverError && (
+          <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600 ring-1 ring-red-200">
+            {serverError}
+          </p>
+        )}
+
+        <div className="flex justify-end">
+          <Button
+            type="submit"
+            size="lg"
+            disabled={submitting || uploadingImage}
+            className="bg-[#072069] text-white hover:bg-[#072069]/90"
+          >
+            {submitting
+              ? "Saving..."
+              : post
+                ? "Update Post"
+                : "Publish Post"}
+          </Button>
+        </div>
       </div>
     </form>
   );

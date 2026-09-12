@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-import { products } from "@/data/products";
-import { faqs } from "@/data/faqs";
+import { products as staticProducts } from "@/data/products";
+import { faqs as staticFaqs } from "@/data/faqs";
+import { getProducts, getProductFaqs } from "@/actions/content";
 
 import {
   Accordion,
@@ -13,13 +14,53 @@ import {
 } from "@/components/ui/accordion";
 
 export default function FAQ() {
-  const [selectedProductId, setSelectedProductId] = useState(
-    products[0]?.id
+  const [productList, setProductList] = useState<any[]>([]);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+  const [allFaqs, setAllFaqs] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function loadData() {
+      const [prodRes, faqRes] = await Promise.all([
+        getProducts(),
+        getProductFaqs(),
+      ]);
+
+      if (prodRes.success && prodRes.data) {
+        const mappedProds = prodRes.data.map((p: any) => ({
+          id: p.id || p.slug,
+          name: p.name,
+          slug: p.slug,
+          category: p.category || "General",
+          description: p.description || "",
+          image: p.image || p.icon || "/showcase/hospitality.webp",
+          badge: p.badge || "SaaS",
+          color: p.color || "#072069",
+          sortOrder: p.sort_order || 1,
+        }));
+        setProductList(mappedProds);
+        if (mappedProds.length > 0) {
+          setSelectedProductId(mappedProds[0].id);
+        }
+      }
+
+      if (faqRes.success && faqRes.data) {
+        const mappedFaqs = faqRes.data.map((f: any) => ({
+          id: f.id,
+          productId: f.product_id || f.productId,
+          question: f.question,
+          answer: f.answer,
+        }));
+        setAllFaqs(mappedFaqs);
+      }
+    }
+    loadData();
+  }, []);
+
+  const productFAQs = allFaqs.filter(
+    (faq) => faq.productId === selectedProductId || faq.product_id === selectedProductId
   );
 
-  const productFAQs = faqs.filter(
-    (faq) => faq.productId === selectedProductId
-  );
+  const displayFaqs = productFAQs.length > 0 ? productFAQs : allFaqs;
 
   return (
     <section className="px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
@@ -53,7 +94,7 @@ export default function FAQ() {
             </p>
 
             <div className="rounded-2xl border border-[#DADEE7] bg-white p-2">
-              {products.map((product) => {
+              {productList.map((product) => {
                 const isActive = product.id === selectedProductId;
 
                 return (
@@ -84,9 +125,9 @@ export default function FAQ() {
           <div className="min-w-0">
             <Accordion
               className="w-full"
-              defaultValue={productFAQs[0]?.id ? [productFAQs[0].id] : []}
+              defaultValue={displayFaqs[0]?.id ? [displayFaqs[0].id] : []}
             >
-              {productFAQs.map((faq) => (
+              {displayFaqs.map((faq) => (
                 <AccordionItem
                   key={faq.id}
                   value={faq.id}
@@ -108,4 +149,4 @@ export default function FAQ() {
       </div>
     </section>
   );
-}
+}

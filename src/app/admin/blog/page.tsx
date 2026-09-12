@@ -13,7 +13,7 @@ export default function BlogPage() {
           </h1>
 
           <p className="mt-1 text-sm text-[#676F7E]">
-            Manage the blog posts displayed on your website.
+            Manage the blog posts published on your website.
           </p>
         </div>
 
