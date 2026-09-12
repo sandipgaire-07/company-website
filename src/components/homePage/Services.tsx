@@ -1,12 +1,36 @@
 
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import LottiePlayer from "@/components/ui/LottiePlayer";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { serviceDetails } from "@/data/services/serviceDetails";
+import { serviceDetails as staticServices } from "@/data/services/serviceDetails";
+import { getServices } from "@/actions/content";
 
 export default function Services() {
+  const [services, setServices] = useState<any[]>(staticServices);
+
+  useEffect(() => {
+    async function loadServices() {
+      const res = await getServices();
+      if (res.success && res.data) {
+        const mapped = res.data.map((s: any) => ({
+          id: s.id,
+          title: s.title,
+          slug: s.slug || s.title.toLowerCase().replace(/\s+/g, "-"),
+          description: s.description,
+          animationUrl: s.animation_url || s.animationUrl || "https://lottie.host/your-web-animation.lottie",
+          color: s.color || "#0EA5E9",
+        }));
+        setServices(mapped);
+      }
+    }
+    loadServices();
+  }, []);
+
   return (
     <section className="bg-[#F8FAFC] px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
       <div className="mx-auto max-w-7xl">
@@ -32,7 +56,7 @@ export default function Services() {
 
         {/* Services Grid */}
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {serviceDetails.map((service, index) => (
+          {services.map((service) => (
             <Card
               key={service.id}
               className="group relative overflow-hidden border-0 bg-white shadow-sm ring-1 ring-[#DADEE7] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
@@ -40,12 +64,13 @@ export default function Services() {
               <CardContent className="relative p-6 sm:p-7">
                 {/* Lottie Animation */}
                 <div className="mt-5 flex h-50 items-center justify-center overflow-hidden rounded-2xl bg-[#F8FAFC]">
-                  <DotLottieReact
-                    src={service.animationUrl}
-                    loop
-                    autoplay
-                    className="h-50 w-50"
-                  />
+                  {service.animationUrl && service.animationUrl.startsWith("http") ? (
+                    <LottiePlayer src={service.animationUrl} className="h-50 w-50" />
+                  ) : (
+                    <div className="flex h-50 w-50 items-center justify-center text-4xl font-bold text-[#072069]">
+                      {service.title.substring(0, 2)}
+                    </div>
+                  )}
                 </div>
 
                 {/* Content */}
@@ -76,3 +101,4 @@ export default function Services() {
     </section>
   );
 }
+

@@ -1,5 +1,5 @@
 import ServiceForm from "@/components/admin/services/ServiceForm";
-import { Button } from "@base-ui/react";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 
@@ -7,7 +7,7 @@ export default function NewServicePage() {
   return (
     <div className="space-y-6">
          <Button
-          className="p-2 rounded bg-linear-to-r bg-[#072069]  text-white hover:opacity-90"
+          className="p-2 rounded bg-linear-to-r bg-[#072069] text-white hover:opacity-90"
           render={<Link href="/admin/services" />}
         >
           Back to Service

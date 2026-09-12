@@ -1,8 +1,29 @@
-import { Card, CardContent } from "@/components/ui/card";
+"use client";
 
-import { stats } from "@/data/stats";
+import { useState, useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { stats as staticStats } from "@/data/stats";
+import { getCompanyStats } from "@/actions/content";
 
 export default function Stats() {
+  const [statList, setStatList] = useState<any[]>(staticStats);
+
+  useEffect(() => {
+    async function loadStats() {
+      const res = await getCompanyStats();
+      if (res.success && res.data && res.data.length > 0) {
+        const mapped = res.data.map((s: any) => ({
+          id: s.id,
+          value: s.value,
+          label: s.label,
+          description: s.description || "",
+        }));
+        setStatList(mapped);
+      }
+    }
+    loadStats();
+  }, []);
+
   return (
     <section className="px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
       <div className="mx-auto max-w-7xl">
@@ -27,7 +48,7 @@ export default function Stats() {
 
         {/* Stats */}
         <div className="mt-12 grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-6">
-          {stats.map((stat) => (
+          {statList.map((stat) => (
             <Card
               key={stat.id}
               className="border-0 bg-white shadow-sm ring-1 ring-[#DADEE7] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
@@ -41,9 +62,11 @@ export default function Stats() {
                   {stat.label}
                 </p>
 
-                <p className="mt-1 text-xs leading-5 text-[#676F7E] sm:text-sm">
-                  {stat.description}
-                </p>
+                {stat.description && (
+                  <p className="mt-1 text-xs leading-5 text-[#676F7E] sm:text-sm">
+                    {stat.description}
+                  </p>
+                )}
               </CardContent>
             </Card>
           ))}
@@ -51,4 +74,4 @@ export default function Stats() {
       </div>
     </section>
   );
-}
+}

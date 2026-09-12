@@ -9,33 +9,21 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
-      user_profiles: {
+      admin_user: {
         Row: {
           id: string
           email: string
-          full_name: string | null
-          role: 'super_admin' | 'admin' | 'manager' | 'editor'
-          permissions: string[]
           created_at: string
-          updated_at: string
         }
         Insert: {
-          id: string
+          id?: string
           email: string
-          full_name?: string | null
-          role?: 'super_admin' | 'admin' | 'manager' | 'editor'
-          permissions?: string[]
           created_at?: string
-          updated_at?: string
         }
         Update: {
           id?: string
           email?: string
-          full_name?: string | null
-          role?: 'super_admin' | 'admin' | 'manager' | 'editor'
-          permissions?: string[]
           created_at?: string
-          updated_at?: string
         }
       }
       site_settings: {
@@ -98,9 +86,12 @@ export interface Database {
           id: string
           name: string
           slug: string
+          category: string
           description: string | null
+          image: string | null
           icon: string | null
-          category: string | null
+          badge: string | null
+          color: string | null
           is_active: boolean
           is_featured: boolean
           sort_order: number
@@ -111,9 +102,12 @@ export interface Database {
           id?: string
           name: string
           slug: string
+          category?: string
           description?: string | null
+          image?: string | null
           icon?: string | null
-          category?: string | null
+          badge?: string | null
+          color?: string | null
           is_active?: boolean
           is_featured?: boolean
           sort_order?: number
@@ -124,9 +118,12 @@ export interface Database {
           id?: string
           name?: string
           slug?: string
+          category?: string
           description?: string | null
+          image?: string | null
           icon?: string | null
-          category?: string | null
+          badge?: string | null
+          color?: string | null
           is_active?: boolean
           is_featured?: boolean
           sort_order?: number
@@ -139,34 +136,46 @@ export interface Database {
           id: string
           product_id: string
           plan_name: string
-          billing_cycle: 'monthly' | 'yearly'
+          description: string | null
+          billing_cycle: 'monthly' | 'yearly' | 'one_time'
           price: number
+          discounted_price: number | null
           currency: string
+          features: Json
           is_highlighted: boolean
           sort_order: number
           created_at: string
+          updated_at: string
         }
         Insert: {
           id?: string
           product_id: string
           plan_name: string
-          billing_cycle: 'monthly' | 'yearly'
+          description?: string | null
+          billing_cycle?: 'monthly' | 'yearly' | 'one_time'
           price: number
+          discounted_price?: number | null
           currency?: string
+          features?: Json
           is_highlighted?: boolean
           sort_order?: number
           created_at?: string
+          updated_at?: string
         }
         Update: {
           id?: string
           product_id?: string
           plan_name?: string
-          billing_cycle?: 'monthly' | 'yearly'
+          description?: string | null
+          billing_cycle?: 'monthly' | 'yearly' | 'one_time'
           price?: number
+          discounted_price?: number | null
           currency?: string
+          features?: Json
           is_highlighted?: boolean
           sort_order?: number
           created_at?: string
+          updated_at?: string
         }
       }
       product_variations: {
@@ -195,116 +204,283 @@ export interface Database {
           created_at?: string
         }
       }
-      services: {
+      product_stats: {
         Row: {
           id: string
-          title: string
+          product_id: string
+          value: string
+          label: string
           description: string
-          icon: string | null
-          is_active: boolean
           sort_order: number
           created_at: string
         }
         Insert: {
           id?: string
-          title: string
+          product_id: string
+          value: string
+          label: string
           description: string
-          icon?: string | null
-          is_active?: boolean
           sort_order?: number
           created_at?: string
         }
         Update: {
           id?: string
-          title?: string
+          product_id?: string
+          value?: string
+          label?: string
           description?: string
-          icon?: string | null
-          is_active?: boolean
           sort_order?: number
           created_at?: string
         }
       }
-      achievements: {
+      product_faqs: {
         Row: {
           id: string
-          value: string
+          product_id: string | null
+          question: string
+          answer: string
+          sort_order: number
+          is_active: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          product_id?: string | null
+          question: string
+          answer: string
+          sort_order?: number
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          product_id?: string | null
+          question?: string
+          answer?: string
+          sort_order?: number
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      product_features: {
+        Row: {
+          id: string
+          product_id: string | null
           title: string
           description: string | null
           icon: string | null
           sort_order: number
+          is_active: boolean
+          created_at: string
+          updated_at: string
         }
         Insert: {
           id?: string
-          value: string
+          product_id?: string | null
           title: string
           description?: string | null
           icon?: string | null
           sort_order?: number
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
         }
         Update: {
           id?: string
-          value?: string
+          product_id?: string | null
           title?: string
           description?: string | null
           icon?: string | null
           sort_order?: number
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
         }
       }
       companies: {
         Row: {
           id: string
           name: string
-          logo_url: string
+          logo: string
+          logo_url: string | null
+          website_url: string | null
           is_active: boolean
           sort_order: number
-        }
-        Insert: {
-          id?: string
-          name: string
-          logo_url: string
-          is_active?: boolean
-          sort_order?: number
-        }
-        Update: {
-          id?: string
-          name?: string
-          logo_url?: string
-          is_active?: boolean
-          sort_order?: number
-        }
-      }
-      demo_requests: {
-        Row: {
-          id: string
-          full_name: string
-          email: string
-          phone: string
-          company_name: string | null
-          product_name: string | null
-          message: string | null
-          status: string
           created_at: string
         }
         Insert: {
           id?: string
-          full_name: string
-          email: string
-          phone: string
-          company_name?: string | null
-          product_name?: string | null
-          message?: string | null
-          status?: string
+          name: string
+          logo: string
+          logo_url?: string | null
+          website_url?: string | null
+          is_active?: boolean
+          sort_order?: number
           created_at?: string
         }
         Update: {
           id?: string
-          full_name?: string
-          email?: string
-          phone?: string
+          name?: string
+          logo?: string
+          logo_url?: string | null
+          website_url?: string | null
+          is_active?: boolean
+          sort_order?: number
+          created_at?: string
+        }
+      }
+      company_stats: {
+        Row: {
+          id: string
+          value: string
+          label: string
+          description: string | null
+          icon: string | null
+          sort_order: number
+          is_active: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          value: string
+          label: string
+          description?: string | null
+          icon?: string | null
+          sort_order?: number
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          value?: string
+          label?: string
+          description?: string | null
+          icon?: string | null
+          sort_order?: number
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      services: {
+        Row: {
+          id: string
+          title: string
+          slug: string | null
+          description: string | null
+          icon: string | null
+          animation_url: string | null
+          color: string | null
+          features: Json
+          is_active: boolean
+          sort_order: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          slug?: string | null
+          description?: string | null
+          icon?: string | null
+          animation_url?: string | null
+          color?: string | null
+          features?: Json
+          is_active?: boolean
+          sort_order?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          slug?: string | null
+          description?: string | null
+          icon?: string | null
+          animation_url?: string | null
+          color?: string | null
+          features?: Json
+          is_active?: boolean
+          sort_order?: number
+          created_at?: string
+        }
+      }
+      team_members: {
+        Row: {
+          id: string
+          name: string
+          role: string
+          bio: string | null
+          avatar_url: string | null
+          linkedin_url: string | null
+          sort_order: number
+          is_active: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          role: string
+          bio?: string | null
+          avatar_url?: string | null
+          linkedin_url?: string | null
+          sort_order?: number
+          is_active?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          role?: string
+          bio?: string | null
+          avatar_url?: string | null
+          linkedin_url?: string | null
+          sort_order?: number
+          is_active?: boolean
+          created_at?: string
+        }
+      }
+      testimonials: {
+        Row: {
+          id: string
+          client_name: string
+          company_name: string | null
+          role: string | null
+          avatar_url: string | null
+          message: string
+          product_name: string | null
+          rating: number
+          is_active: boolean
+          sort_order: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          client_name: string
           company_name?: string | null
+          role?: string | null
+          avatar_url?: string | null
+          message: string
           product_name?: string | null
-          message?: string | null
-          status?: string
+          rating?: number
+          is_active?: boolean
+          sort_order?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          client_name?: string
+          company_name?: string | null
+          role?: string | null
+          avatar_url?: string | null
+          message?: string
+          product_name?: string | null
+          rating?: number
+          is_active?: boolean
+          sort_order?: number
           created_at?: string
         }
       }
@@ -388,33 +564,48 @@ export interface Database {
         Row: {
           id: string
           title: string
+          slug: string | null
           department: string
           location: string
           employment_type: 'Full-time' | 'Part-time' | 'Contract' | 'Internship'
           description: string
+          application_deadline: string | null
+          href: string | null
+          responsibilities: string[]
           requirements: string[]
+          qualifications: string[]
           is_open: boolean
           created_at: string
         }
         Insert: {
           id?: string
           title: string
-          department: string
+          slug?: string | null
+          department?: string
           location?: string
           employment_type?: 'Full-time' | 'Part-time' | 'Contract' | 'Internship'
           description: string
+          application_deadline?: string | null
+          href?: string | null
+          responsibilities?: string[]
           requirements?: string[]
+          qualifications?: string[]
           is_open?: boolean
           created_at?: string
         }
         Update: {
           id?: string
           title?: string
+          slug?: string | null
           department?: string
           location?: string
           employment_type?: 'Full-time' | 'Part-time' | 'Contract' | 'Internship'
           description?: string
+          application_deadline?: string | null
+          href?: string | null
+          responsibilities?: string[]
           requirements?: string[]
+          qualifications?: string[]
           is_open?: boolean
           created_at?: string
         }
@@ -424,37 +615,148 @@ export interface Database {
           id: string
           title: string
           slug: string
+          category: string
           excerpt: string | null
-          content: string
+          content: Json
           cover_image: string | null
           author_name: string
-          category: string
           published_at: string
           is_published: boolean
+          created_at: string
         }
         Insert: {
           id?: string
           title: string
           slug: string
+          category?: string
           excerpt?: string | null
-          content: string
+          content: Json
           cover_image?: string | null
           author_name?: string
-          category?: string
           published_at?: string
           is_published?: boolean
+          created_at?: string
         }
         Update: {
           id?: string
           title?: string
           slug?: string
+          category?: string
           excerpt?: string | null
-          content?: string
+          content?: Json
           cover_image?: string | null
           author_name?: string
-          category?: string
           published_at?: string
           is_published?: boolean
+          created_at?: string
+        }
+      }
+      demo_requests: {
+        Row: {
+          id: string
+          full_name: string
+          email: string
+          phone: string
+          company_name: string | null
+          product_name: string | null
+          message: string | null
+          status: 'pending' | 'contacted' | 'closed'
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          full_name: string
+          email: string
+          phone: string
+          company_name?: string | null
+          product_name?: string | null
+          message?: string | null
+          status?: 'pending' | 'contacted' | 'closed'
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          full_name?: string
+          email?: string
+          phone?: string
+          company_name?: string | null
+          product_name?: string | null
+          message?: string | null
+          status?: 'pending' | 'contacted' | 'closed'
+          created_at?: string
+        }
+      }
+      contact_submissions: {
+        Row: {
+          id: string
+          name: string
+          email: string
+          phone: string | null
+          company: string | null
+          subject: string | null
+          message: string
+          status: 'new' | 'read' | 'archived'
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          email: string
+          phone?: string | null
+          company?: string | null
+          subject?: string | null
+          message: string
+          status?: 'new' | 'read' | 'archived'
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          email?: string
+          phone?: string | null
+          company?: string | null
+          subject?: string | null
+          message?: string
+          status?: 'new' | 'read' | 'archived'
+          created_at?: string
+        }
+      }
+      job_applications: {
+        Row: {
+          id: string
+          job_id: string | null
+          job_title: string
+          full_name: string
+          email: string
+          phone: string
+          resume_url: string
+          cover_message: string | null
+          status: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          job_id?: string | null
+          job_title: string
+          full_name: string
+          email: string
+          phone: string
+          resume_url: string
+          cover_message?: string | null
+          status?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          job_id?: string | null
+          job_title?: string
+          full_name?: string
+          email?: string
+          phone?: string
+          resume_url?: string
+          cover_message?: string | null
+          status?: string
+          created_at?: string
         }
       }
     }

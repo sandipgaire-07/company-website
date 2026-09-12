@@ -6,7 +6,11 @@ import {
   LogOut,
   Settings,
   User,
+  Loader2,
 } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -18,12 +22,34 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { adminLogout } from "@/actions/auth";
 
 export default function AdminHeader() {
+  const router = useRouter();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  async function handleLogout() {
+    setIsLoggingOut(true);
+    try {
+      const res = await adminLogout();
+      if (res.success) {
+        toast.success("Logged out successfully.");
+        router.push("/admin/login");
+        router.refresh();
+      } else {
+        toast.error(res.error || "Logout failed.");
+      }
+    } catch {
+      toast.error("An unexpected error occurred during logout.");
+    } finally {
+      setIsLoggingOut(false);
+    }
+  }
+
   return (
     <header className="flex h-16 items-center justify-between border-b border-[#DADEE7] bg-white px-4 sm:px-6">
       
-      {/* Sidebar */}
+      {/* Sidebar toggle */}
       <SidebarTrigger className="text-[#676F7E] hover:bg-[#EBF0FA] hover:text-[#072069]" />
 
       {/* Right side */}
@@ -38,7 +64,6 @@ export default function AdminHeader() {
           aria-label="Notifications"
         >
           <Bell className="size-5" />
-
           <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-[#0EA5E9] ring-2 ring-white" />
         </Button>
 
@@ -62,7 +87,6 @@ export default function AdminHeader() {
               <span className="block text-sm font-medium text-[#0F1729]">
                 Admin
               </span>
-
               <span className="block text-xs text-[#676F7E]">
                 Administrator
               </span>
@@ -75,9 +99,7 @@ export default function AdminHeader() {
             align="end"
             className="w-56 border-[#DADEE7] bg-white"
           >
-            <DropdownMenuLabel>
-              Admin account
-            </DropdownMenuLabel>
+            <DropdownMenuLabel>Admin account</DropdownMenuLabel>
 
             <DropdownMenuSeparator />
 
@@ -93,9 +115,17 @@ export default function AdminHeader() {
 
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem>
-              <LogOut className="text-[#0EA5E9]" />
-              Logout
+            <DropdownMenuItem
+              onSelect={handleLogout}
+              disabled={isLoggingOut}
+              className="text-red-600 focus:text-red-600"
+            >
+              {isLoggingOut ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <LogOut className="text-red-500" />
+              )}
+              {isLoggingOut ? "Logging out..." : "Logout"}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

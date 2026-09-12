@@ -2,10 +2,7 @@ import { notFound } from "next/navigation";
 
 import JobDetails from "@/components/careerPage/JobDetails";
 import { jobs } from "@/data/jobs";
-
-export function generateStaticParams() {
-  return jobs.map((job) => ({ slug: job.slug }));
-}
+import { adminGetJobBySlug } from "@/actions/admin";
 
 export default async function JobDetailsPage({
   params,
@@ -13,7 +10,10 @@ export default async function JobDetailsPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const job = jobs.find((item) => item.slug === slug);
+  const staticJob = jobs.find((item) => item.slug === slug);
+  const dbRes = await adminGetJobBySlug(slug);
+
+  const job = dbRes.success && dbRes.data ? dbRes.data : staticJob;
 
   if (!job) {
     notFound();

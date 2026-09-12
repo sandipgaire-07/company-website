@@ -1,10 +1,13 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import { Star } from "lucide-react";
 
-import { testimonials } from "@/data/testimonials";
+import { testimonials as staticTestimonials } from "@/data/testimonials";
+import { getTestimonials } from "@/actions/content";
+import type { Testimonial } from "@/types/testimonial";
 
 import {
   Carousel,
@@ -17,6 +20,18 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function Testimonials() {
+  const [testimonialList, setTestimonialList] = useState<Testimonial[]>(staticTestimonials);
+
+  useEffect(() => {
+    async function loadTestimonials() {
+      const res = await getTestimonials();
+      if (res.success && res.data) {
+        setTestimonialList(res.data);
+      }
+    }
+    loadTestimonials();
+  }, []);
+
   return (
     <section className="px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
       <div className="mx-auto max-w-7xl">
@@ -56,7 +71,7 @@ export default function Testimonials() {
             className="w-full"
           >
             <CarouselContent className="-ml-4">
-              {testimonials.map((testimonial) => (
+              {testimonialList.map((testimonial) => (
                 <CarouselItem
                   key={testimonial.id}
                   className="p-6 w-210  sm:basis-1/3"
@@ -67,7 +82,7 @@ export default function Testimonials() {
                       {/* Client Image */}
                       <div className="relative mx-auto size-24 overflow-hidden rounded-full bg-[#F8FAFC] ring-4 ring-[#EBF0FA]">
                         <Image
-                          src={testimonial.avatar}
+                          src={testimonial.avatar || "/testimonials/client-1.jpg"}
                           alt={testimonial.clientName}
                           fill
                           className="object-cover"
@@ -77,7 +92,7 @@ export default function Testimonials() {
                       {/* Rating */}
                       <div className="mt-5 flex justify-center gap-1">
                         {Array.from({
-                          length: testimonial.rating,
+                          length: testimonial.rating || 5,
                         }).map((_, index) => (
                           <Star
                             key={index}
@@ -123,4 +138,4 @@ export default function Testimonials() {
       </div>
     </section>
   );
-}
+}

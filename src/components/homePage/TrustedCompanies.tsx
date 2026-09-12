@@ -1,9 +1,30 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
-import { companies } from "@/data/companies";
+import { companies as staticCompanies } from "@/data/companies";
+import { getSiteContent } from "@/actions/content";
 import { Marquee } from "@/components/ui/marquee";
 
 export default function TrustedCompanies() {
+  const [companyList, setCompanyList] = useState(staticCompanies);
+
+  useEffect(() => {
+    async function loadCompanies() {
+      const res = await getSiteContent();
+      if (res.success && res.data && res.data.companies && res.data.companies.length > 0) {
+        const mapped = res.data.companies.map((c: any) => ({
+          id: c.id,
+          name: c.name,
+          logo: c.logo || c.logo_url || "/companies/company-one.svg",
+        }));
+        setCompanyList(mapped);
+      }
+    }
+    loadCompanies();
+  }, []);
+
   return (
     <section className="border-y border-[#DADEE7] bg-[#F8FAFC] py-12 sm:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -34,7 +55,7 @@ export default function TrustedCompanies() {
           <Marquee
             pauseOnHover
           >
-            {companies.map((company) => (
+            {companyList.map((company) => (
               <div
                 key={company.id}
                 className="group/logo flex h-16 w-36 shrink-0 items-center justify-center sm:w-44"
@@ -53,4 +74,4 @@ export default function TrustedCompanies() {
       </div>
     </section>
   );
-}
+}

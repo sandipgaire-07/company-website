@@ -3,10 +3,7 @@ import { notFound } from "next/navigation";
 import ServiceFeatures from "@/components/serviceDetails/ServiceFeatures";
 import ServiceHero from "@/components/serviceDetails/ServiceHero";
 import { getServiceDetails, serviceDetails } from "@/data/services/serviceDetails";
-
-export function generateStaticParams() {
-  return serviceDetails.map((service) => ({ slug: service.slug }));
-}
+import { adminGetServiceById } from "@/actions/admin";
 
 export default async function ServiceDetailsPage({
   params,
@@ -14,7 +11,10 @@ export default async function ServiceDetailsPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const service = getServiceDetails(slug);
+  const staticService = getServiceDetails(slug);
+  const dbRes = await adminGetServiceById(slug);
+
+  const service = dbRes.success && dbRes.data ? dbRes.data : staticService;
 
   if (!service) {
     notFound();

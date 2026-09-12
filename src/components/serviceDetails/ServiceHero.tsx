@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import LottiePlayer from "@/components/ui/LottiePlayer";
 
 import { Button } from "@/components/ui/button";
 import { ServiceDetails } from "@/types/service";
@@ -23,7 +23,7 @@ export default function ServiceHero({ service }: { service: ServiceDetails }) {
         </div>
 
         <div className="relative z-10 flex min-h-[260px] items-center justify-center rounded-2xl bg-white/10 p-6">
-          <DotLottieReact src={service.animationUrl} loop autoplay className="h-64 w-64" />
+          <LottiePlayer src={service.animationUrl} className="h-64 w-64" />
           <div className="pointer-events-none absolute -right-12 -top-12 size-40 rounded-full blur-3xl" style={{ backgroundColor: `${service.color}55` }} />
         </div>
 

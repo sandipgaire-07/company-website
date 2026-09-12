@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Headphones,
@@ -14,6 +17,7 @@ import {
 } from "@icons-pack/react-simple-icons";
 
 import { footerData } from "@/data/footer";
+import { getProducts } from "@/actions/content";
 
 const iconMap = {
   Facebook: SiFacebook,
@@ -27,6 +31,23 @@ const iconMap = {
 };
 
 export default function Footer() {
+  const [productList, setProductList] = useState<any[]>(footerData.products);
+
+  useEffect(() => {
+    async function loadFooterProducts() {
+      const res = await getProducts();
+      if (res.success && res.data && res.data.length > 0) {
+        const mapped = res.data.map((p: any) => ({
+          id: p.id || p.slug,
+          label: p.name,
+          href: `/products/${p.slug}`,
+        }));
+        setProductList(mapped);
+      }
+    }
+    loadFooterProducts();
+  }, []);
+
   return (
     <footer className="bg-[#0F1729] text-white">
 
@@ -39,14 +60,17 @@ export default function Footer() {
           <div>
             <Link
               href="/"
-              className="text-2xl font-bold tracking-tight"
+              className="flex items-center gap-2 text-2xl font-extrabold tracking-tight text-white"
             >
-              Leaf<span className="text-[#0EA5E9]">Clutch</span>
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-[#0EA5E9] to-[#3BE3A0] text-slate-950 font-black shadow-md shadow-[#0EA5E9]/20">
+                N
+              </span>
+              <span>NCT <span className="text-[#0EA5E9]">SOFT</span></span>
             </Link>
 
-            <p className="mt-5 max-w-sm text-sm leading-6 text-white/60">
+            <p className="mt-5 max-w-sm text-sm leading-6 text-slate-400">
               Building modern digital solutions that help businesses
-              simplify operations, work smarter, and grow faster.
+              simplify operations, work smarter, and scale faster.
             </p>
 
             {/* Social Media */}
@@ -97,8 +121,8 @@ export default function Footer() {
               Products
             </h3>
 
-            <ul className="mt-5 grid grid-cols-2 gap-x-6 gap-y-3">
-              {footerData.products.map((product) => (
+            <ul className="mt-5 grid grid-cols-1 gap-y-3 sm:grid-cols-2 sm:gap-x-6">
+              {productList.map((product) => (
                 <li key={product.id}>
                   <Link
                     href={product.href}
@@ -161,8 +185,8 @@ export default function Footer() {
         {/* Bottom */}
         <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
 
-          <p className="text-xs text-white/40">
-            © {new Date().getFullYear()} LeafClutch. All rights reserved.
+          <p className="text-xs text-slate-400">
+            © {new Date().getFullYear()} NCT SOFT Pvt. Ltd. All rights reserved.
           </p>
 
           <div className="flex gap-5">

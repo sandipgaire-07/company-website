@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
-
-import { serviceDetails } from "@/data/services/serviceDetails";
-import ServiceForm from "@/components/admin/services/ServiceForm";
-import { Button } from "@base-ui/react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+
+import { adminGetServiceById } from "@/actions/admin";
+import ServiceForm from "@/components/admin/services/ServiceForm";
+import { Button } from "@/components/ui/button";
+
 type EditServicePageProps = {
   params: Promise<{ id: string }>;
 };
@@ -14,9 +15,11 @@ export default async function EditServicePage({
 }: EditServicePageProps) {
   const { id } = await params;
 
-  const service = serviceDetails.find(
-    (service) => service.id === id
-  );
+  let service = null;
+  const res = await adminGetServiceById(id);
+  if (res.success && res.data) {
+    service = res.data;
+  }
 
   if (!service) {
     notFound();
@@ -24,12 +27,13 @@ export default async function EditServicePage({
 
   return (
     <div className="space-y-6">
-        <Button
-          className="bg-[#072069] text-white hover:bg-[#072069]/90"
-          render={<Link href="/admin/services" />}
-        >
-          <ArrowLeft />
-        </Button>
+      <Button
+        className="bg-[#072069] text-white hover:bg-[#072069]/90"
+        render={<Link href="/admin/services" />}
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Back to services
+      </Button>
 
       <div className="mt-4">
         <h1 className="text-2xl font-bold tracking-tight text-[#0F1729]">

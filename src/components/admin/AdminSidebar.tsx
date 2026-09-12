@@ -6,6 +6,7 @@ import {
   BriefcaseBusiness,
   FileText,
   HelpCircle,
+  Inbox,
   LayoutDashboard,
   MessageSquare,
   Package,
@@ -25,6 +26,7 @@ import {
 } from "@/components/ui/sidebar";
 
 const contentItems = [
+  { title: "Submissions", href: "/admin/submissions", icon: Inbox },
   { title: "Products", href: "/admin/products", icon: Package },
   { title: "Services", href: "/admin/services", icon: Wrench },
   { title: "Testimonials", href: "/admin/testimonials", icon: MessageSquare },
@@ -32,6 +34,7 @@ const contentItems = [
   { title: "Careers", href: "/admin/careers", icon: BriefcaseBusiness },
   { title: "Blog", href: "/admin/blog", icon: FileText },
 ];
+
 
 export default function AdminSidebar() {
   const pathname = usePathname();

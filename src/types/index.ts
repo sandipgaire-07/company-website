@@ -101,8 +101,20 @@ export interface ContactSubmissionInput {
   email: string
   phone?: string
   company?: string
+  subject?: string
   message: string
 }
+
+export interface JobApplicationInput {
+  job_id?: string
+  job_title: string
+  full_name: string
+  email: string
+  phone: string
+  resume_url: string
+  cover_message?: string
+}
+
 
 export interface PortfolioShowcase {
   id: string

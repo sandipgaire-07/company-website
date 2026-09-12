@@ -1,16 +1,47 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { products } from "@/data/products";
+import Link from "next/link";
+import { products as staticProducts } from "@/data/products";
+import { getProducts } from "@/actions/content";
+import DemoRequestModal from "@/components/ui/DemoRequestModal";
 
 export default function Products() {
-  const [selectedProductId, setSelectedProductId] = useState(
-    products[0]?.id
-  );
-  const selectedProduct = products.find(
+  const [productList, setProductList] = useState<any[]>([]);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadProducts() {
+      setLoading(true);
+      const res = await getProducts();
+      if (res.success && res.data) {
+        const mapped = res.data.map((p: any) => ({
+          id: p.id || p.slug,
+          name: p.name,
+          slug: p.slug,
+          category: p.category || "Solutions",
+          description: p.description || "",
+          image: p.image || p.icon || "/showcase/hospitality.webp",
+          badge: p.badge || "Enterprise",
+          color: p.color || "#072069",
+          sortOrder: p.sort_order || 1,
+        }));
+        setProductList(mapped);
+        if (mapped.length > 0) {
+          setSelectedProductId(mapped[0].id);
+        }
+      }
+      setLoading(false);
+    }
+    loadProducts();
+  }, []);
+
+  const selectedProduct = productList.find(
     (product) => product.id === selectedProductId
-  );
+  ) || productList[0];
 
   return (
     <section>
@@ -36,8 +67,8 @@ export default function Products() {
 
   {/* Product Selector */}
   <div className="rounded-2xl border max-h-110 border-[#DADEE7] bg-white p-3 overflow-y-auto">
-        <p>Products:</p>
-    {products.map((product,index) => {
+        <p className="px-2 py-1 text-sm font-bold text-[#0F1729]">Products:</p>
+    {productList.map((product, index) => {
       const isActive = product.id === selectedProductId;
 
       return (
@@ -91,17 +122,18 @@ export default function Products() {
       <div className="mt-6 flex flex-wrap gap-3">
         <button
           type="button"
+          onClick={() => setIsDemoModalOpen(true)}
           className="rounded-lg bg-[#072069] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#0EA5E9]"
         >
           Request Demo
         </button>
 
-        <button
-          type="button"
+        <Link
+          href="/contact"
           className="rounded-lg border border-[#DADEE7] px-5 py-2.5 text-sm font-semibold text-[#072069] transition-colors hover:bg-[#EBF0FA]"
         >
           Contact Us
-        </button>
+        </Link>
       </div>
     </div>
 
@@ -109,7 +141,7 @@ export default function Products() {
     <div className="relative flex min-h-[280px] items-center justify-center bg-[#F8FAFC] sm:min-h-[350px] lg:min-h-[400px] p-4">
       {selectedProduct && (
         <Image
-          src={selectedProduct.image}
+          src={selectedProduct.image || "/showcase/hospitality.webp"}
           alt={selectedProduct.name}
           width={450}
           height={350}
@@ -121,7 +153,14 @@ export default function Products() {
   </div>
 </div>
 
+<DemoRequestModal
+  isOpen={isDemoModalOpen}
+  onClose={() => setIsDemoModalOpen(false)}
+  defaultProduct={selectedProduct?.name || "ApexFlow Solution"}
+/>
+
 </div>
+
     </section>
   );
-}
+}

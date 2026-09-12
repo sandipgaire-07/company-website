@@ -15,8 +15,9 @@ export default function ProductPricing({
   color,
 }: ProductPricingProps) {
   const sortedPricing = [...pricing].sort(
-    (a, b) => a.sortOrder - b.sortOrder
+    (a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0)
   );
+
 
   return (
     <section className="bg-[#F8FAFC] px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
