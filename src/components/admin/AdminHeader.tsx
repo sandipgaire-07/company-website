@@ -55,18 +55,6 @@ export default function AdminHeader() {
       {/* Right side */}
       <div className="flex items-center gap-2">
 
-        {/* Notifications */}
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="relative text-[#676F7E] hover:bg-[#EBF0FA] hover:text-[#072069]"
-          aria-label="Notifications"
-        >
-          <Bell className="size-5" />
-          <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-[#0EA5E9] ring-2 ring-white" />
-        </Button>
-
         {/* Admin menu */}
         <DropdownMenu>
           <DropdownMenuTrigger
