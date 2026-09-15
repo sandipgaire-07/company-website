@@ -3,15 +3,19 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  Award,
   BriefcaseBusiness,
   FileText,
+  FolderKanban,
   Handshake,
   HelpCircle,
   Inbox,
   LayoutDashboard,
+  LayoutTemplate,
   MessageSquare,
   Package,
   Building2,
+  Users,
   Wrench,
 } from "lucide-react";
 
@@ -27,6 +31,9 @@ import {
 } from "@/components/ui/sidebar";
 
 const contentItems = [
+  { title: "Homepage", href: "/admin/homepage", icon: LayoutTemplate },
+  { title: "Portfolio", href: "/admin/portfolio", icon: FolderKanban },
+  { title: "Certificates", href: "/admin/certificates", icon: Award },
   { title: "Submissions", href: "/admin/submissions", icon: Inbox },
   { title: "Products", href: "/admin/products", icon: Package },
   { title: "Services", href: "/admin/services", icon: Wrench },
@@ -42,6 +49,7 @@ const contentItems = [
     icon: Handshake,
   },
   { title: "Careers", href: "/admin/careers", icon: BriefcaseBusiness },
+  { title: "Team", href: "/admin/team", icon: Users },
   { title: "Blog", href: "/admin/blog", icon: FileText },
   {
     title: "Company Details",

@@ -33,7 +33,7 @@ export default function AboutHero() {
               }
               nativeButton={false}
               size="lg"
-              className="h-auto rounded-md bg-linear-to-r from-[#072069] to-[#0EA5E9] px-6 py-3 text-sm font-medium text-white shadow-lg shadow-[#0EA5E9]/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#0EA5E9]/30"
+              className="h-auto rounded-md bg-[#072069] px-6 py-3 text-sm font-medium text-white shadow-lg shadow-[#0EA5E9]/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#0EA5E9]/30"
             />
 
             <Button

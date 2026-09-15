@@ -20,7 +20,7 @@ export default function Hero() {
 
           <h1 className="mt-6 text-4xl font-bold leading-tight tracking-tight text-[#0F1729] sm:text-5xl lg:text-6xl">
             Building Software
-            <span className="block bg-gradient-to-r from-[#072069] to-[#0EA5E9] bg-clip-text text-transparent">
+            <span className="block  bg-[#072069]  bg-clip-text text-transparent">
               That Moves Your Business Forward
             </span>
           </h1>
@@ -34,8 +34,8 @@ export default function Hero() {
           {/* Buttons */}
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link
-              href="#contact"
-              className="inline-flex items-center justify-center rounded-md bg-gradient-to-r from-[#072069] to-[#0EA5E9] px-6 py-3 text-sm font-medium text-white shadow-lg shadow-[#0EA5E9]/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#0EA5E9]/30"
+              href="/contact"
+              className="inline-flex items-center justify-center rounded-md bg-[#072069] px-6 py-3 text-sm font-medium text-white shadow-lg shadow-[#0EA5E9]/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#0EA5E9]/30"
             >
               Get Started
             </Link>

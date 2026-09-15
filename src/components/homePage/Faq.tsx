@@ -17,6 +17,7 @@ export default function FAQ() {
   const [productList, setProductList] = useState<any[]>([]);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [allFaqs, setAllFaqs] = useState<any[]>([]);
+  const [openValues, setOpenValues] = useState<string[]>([]);
 
   useEffect(() => {
     async function loadData() {
@@ -61,6 +62,12 @@ export default function FAQ() {
   );
 
   const displayFaqs = productFAQs.length > 0 ? productFAQs : allFaqs;
+
+  useEffect(() => {
+    if (displayFaqs.length > 0) {
+      setOpenValues([displayFaqs[0].id]);
+    }
+  }, [selectedProductId, allFaqs.length]);
 
   return (
     <section className="px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
@@ -125,7 +132,8 @@ export default function FAQ() {
           <div className="min-w-0">
             <Accordion
               className="w-full"
-              defaultValue={displayFaqs[0]?.id ? [displayFaqs[0].id] : []}
+              value={openValues}
+              onValueChange={(val) => setOpenValues(val as string[])}
             >
               {displayFaqs.map((faq) => (
                 <AccordionItem

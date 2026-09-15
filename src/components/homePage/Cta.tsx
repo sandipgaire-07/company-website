@@ -3,9 +3,14 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 
-export default function CTA() {
+type CTAProps = {
+  title?: string;
+  description?: string;
+};
+
+export default function CTA({ title, description }: CTAProps) {
   return (
- 
+
 <section className="px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
   <div className="mx-auto max-w-7xl">
     <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#072069] via-[#0B4EA2] to-[#0EA5E9] px-6 py-12 sm:px-10 lg:px-14 lg:py-14">
@@ -19,13 +24,19 @@ export default function CTA() {
           </p>
 
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Let&apos;s Build Something{" "}
-            <span className="text-[#3BE3A0]">Great Together.</span>
+            {title ? (
+              title
+            ) : (
+              <>
+                Let&apos;s Build Something{" "}
+                <span className="text-[#3BE3A0]">Great Together.</span>
+              </>
+            )}
           </h2>
 
           <p className="mt-4 text-base leading-7 text-white/80 sm:text-lg">
-            Have specific queries or expectations? Drop us an email and our
-            specialists will guide you through our ecosystem.
+            {description ||
+              "Have specific queries or expectations? Drop us an email and our specialists will guide you through our ecosystem."}
           </p>
         </div>
 

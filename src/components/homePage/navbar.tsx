@@ -1,15 +1,16 @@
-
 "use client";
 
 import Link from "next/link";
 import {
-  Building2,
   ChevronDown,
-  CookingPot,
-  Fingerprint,
   Menu,
-  ReceiptText,
   X,
+  Briefcase,
+  BookOpen,
+  GraduationCap,
+  Award,
+  FolderKanban,
+  HelpCircle,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -21,51 +22,44 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { products as staticProducts } from "@/data/products";
-import { getProducts } from "@/actions/content";
-
-const navItems = [
+const primaryNavItems = [
   { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Careers", href: "/career" },
-  { label: "Contact", href: "/contact" },
+  { label: "About Us", href: "/about" },
+  { label: "Services", href: "/services" },
+  { label: "Our Products", href: "/products" },
 ];
 
-const iconMap = {
-  Hospitality: Building2,
-  "Food & Beverage": CookingPot,
-  "Workforce Tech": Fingerprint,
-  FinTech: ReceiptText,
-};
+const othersItems = [
+  { label: "Careers", href: "/career", icon: Briefcase, external: false },
+  { label: "Blogs", href: "/blog", icon: BookOpen, external: false },
+  {
+    label: "Training & Internship",
+    href: "https://leafclutchtech.com.np",
+    icon: GraduationCap,
+    external: true,
+  },
+  { label: "Verify Certificate", href: "/verify-certificate", icon: Award, external: false },
+  { label: "Our Work / Portfolio", href: "/portfolio", icon: FolderKanban, external: false },
+  { label: "FAQ", href: "/faq", icon: HelpCircle, external: false },
+];
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
-  const [isProductsOpen, setIsProductsOpen] = useState(false);
-  const [productList, setProductList] = useState<any[]>(staticProducts);
+  const [isMobileOthersOpen, setIsMobileOthersOpen] = useState(false);
+  const [isOthersOpen, setIsOthersOpen] = useState(false);
 
   const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => {
-    async function loadNavProducts() {
-      const res = await getProducts();
-      if (res.success && res.data && res.data.length > 0) {
-        setProductList(res.data);
-      }
-    }
-    loadNavProducts();
-  }, []);
-
-  const handleProductsEnter = () => {
+  const handleOthersEnter = () => {
     if (closeTimeout.current) {
       clearTimeout(closeTimeout.current);
     }
-    setIsProductsOpen(true);
+    setIsOthersOpen(true);
   };
 
-  const handleProductsLeave = () => {
+  const handleOthersLeave = () => {
     closeTimeout.current = setTimeout(() => {
-      setIsProductsOpen(false);
+      setIsOthersOpen(false);
     }, 150);
   };
 
@@ -79,7 +73,7 @@ export default function Navbar() {
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
-    setIsMobileProductsOpen(false);
+    setIsMobileOthersOpen(false);
   };
 
   return (
@@ -91,15 +85,17 @@ export default function Navbar() {
           onClick={closeMobileMenu}
           className="group flex items-center gap-2 text-2xl font-extrabold tracking-tight text-[#072069]"
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-[#072069] to-[#0EA5E9] text-white shadow-md shadow-[#0EA5E9]/20 transition-transform group-hover:scale-105">
-            N
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-[#0EA5E9] to-[#3BE3A0] text-slate-950 font-black shadow-md shadow-[#0EA5E9]/20">
+            L
           </span>
-          <span>NCT<span className="text-[#0EA5E9]">SOFT</span></span>
+          <span>
+            Leaf<span className="text-[#0EA5E9]">Clutch</span>
+          </span>
         </Link>
 
         {/* Desktop Navigation */}
         <div className="hidden items-center gap-8 md:flex">
-          {navItems.map((item) => (
+          {primaryNavItems.map((item) => (
             <Link
               key={item.label}
               href={item.href}
@@ -109,111 +105,77 @@ export default function Navbar() {
             </Link>
           ))}
 
-          {/* Products Hover Dropdown */}
+          {/* Others Dropdown */}
           <div
             className="relative"
-            onMouseEnter={handleProductsEnter}
-            onMouseLeave={handleProductsLeave}
+            onMouseEnter={handleOthersEnter}
+            onMouseLeave={handleOthersLeave}
           >
-            <DropdownMenu
-              open={isProductsOpen}
-              onOpenChange={setIsProductsOpen}
-            >
+            <DropdownMenu open={isOthersOpen} onOpenChange={setIsOthersOpen}>
               <DropdownMenuTrigger
                 className="flex items-center gap-1 text-sm font-medium text-[#676F7E] outline-none transition-colors hover:text-[#072069]"
-                onPointerEnter={handleProductsEnter}
+                onPointerEnter={handleOthersEnter}
               >
-                Products
+                Others
                 <ChevronDown
                   className={`h-4 w-4 transition-transform duration-200 ${
-                    isProductsOpen ? "rotate-180" : ""
+                    isOthersOpen ? "rotate-180" : ""
                   }`}
                 />
               </DropdownMenuTrigger>
-<DropdownMenuContent
-  align="center"
-  sideOffset={10}
-  className="w-80 rounded-xl border border-[#DADEE7] bg-white p-2 shadow-xl shadow-[#072069]/10"
-  onMouseEnter={handleProductsEnter}
-  onMouseLeave={handleProductsLeave}
->
-  {/* Dropdown Header */}
-  <div className="mb-1 rounded-lg bg-gradient-to-r from-[#072069]/5 to-[#0EA5E9]/10 px-3 py-2.5">
-    <p className="text-sm font-semibold text-[#072069]">
-      Our Products
-    </p>
 
-    <p className="mt-0.5 text-xs text-[#676F7E]">
-      Explore our software solutions
-    </p>
-  </div>
-
-  {productList.map((product) => {
-    const Icon = iconMap[product.category as keyof typeof iconMap] || Building2;
-
-    return (
-      <DropdownMenuItem
-        key={product.id}
-        render={
-          <Link href={`/products/${product.slug}`} />
-        }
-        className="group cursor-pointer rounded-lg p-0 outline-none focus:bg-[#F8FAFC] data-[highlighted]:bg-[#F8FAFC]"
-      >
-        <div className="flex w-full items-start gap-3 rounded-lg p-3 transition-all duration-200">
-          {/* Icon */}
-          <div
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-all duration-200 group-hover:text-white"
-            style={{ backgroundColor: `${product.color}15`, color: product.color }}
-          >
-            <Icon className="h-5 w-5 transition-colors duration-200" />
-          </div>
-
-          {/* Content */}
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-[#0F1729] transition-colors duration-200" style={{ color: product.color }}>
-              {product.name}
-            </p>
-
-            <p className="mt-1 line-clamp-2 text-xs leading-5 text-[#676F7E]">
-              {product.description}
-            </p>
-          </div>
-
-          {/* Arrow */}
-          <span className="mt-2 text-sm text-[#DADEE7] transition-all duration-200 group-hover:translate-x-1 group-hover:text-[#0EA5E9]">
-            →
-          </span>
-        </div>
-      </DropdownMenuItem>
-    );
-  })}
-
-  {/* View All */}
-  <div className="mt-1 border-t border-[#DADEE7] pt-2">
-    <DropdownMenuItem
-      render={<Link href="/products" />}
-      className="group cursor-pointer rounded-lg outline-none data-[highlighted]:bg-[#F8FAFC]"
-    >
-      <div className="flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2.5">
-        <span className="text-sm font-semibold text-[#0EA5E9] transition-colors group-hover:text-[#072069]">
-          View all products
-        </span>
-
-        <span className="text-[#0EA5E9] transition-transform duration-200 group-hover:translate-x-1">
-          →
-        </span>
-      </div>
-    </DropdownMenuItem>
-  </div>
-</DropdownMenuContent>
+              <DropdownMenuContent
+                align="center"
+                sideOffset={10}
+                className="w-64 rounded-xl border border-[#DADEE7] bg-white p-2 shadow-xl shadow-[#072069]/10"
+                onMouseEnter={handleOthersEnter}
+                onMouseLeave={handleOthersLeave}
+              >
+                {othersItems.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <DropdownMenuItem
+                      key={item.label}
+                      render={
+                        item.external ? (
+                          <a
+                            href={item.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          />
+                        ) : (
+                          <Link href={item.href} />
+                        )
+                      }
+                      className="group cursor-pointer rounded-lg p-2.5 outline-none transition-colors hover:bg-[#F8FAFC] data-[highlighted]:bg-[#F8FAFC]"
+                    >
+                      <div className="flex w-full items-center gap-3">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#072069]/5 text-[#072069] transition-colors group-hover:bg-[#072069] group-hover:text-white">
+                          <Icon className="h-4 w-4" />
+                        </div>
+                        <span className="text-sm font-medium text-[#0F1729] transition-colors group-hover:text-[#072069]">
+                          {item.label}
+                        </span>
+                      </div>
+                    </DropdownMenuItem>
+                  );
+                })}
+              </DropdownMenuContent>
             </DropdownMenu>
           </div>
+
+          <Link
+            href="/contact"
+            className="text-sm font-medium text-[#676F7E] transition-colors hover:text-[#072069]"
+          >
+            Contact Us
+          </Link>
         </div>
 
         {/* Desktop CTA */}
         <Link
-          href="#contact"
-          className="hidden rounded-md bg-[#0EA5E9] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#072069] md:inline-flex"
+          href="/contact"
+          className="hidden rounded-md bg-[#072069] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#0EA5E9] md:inline-flex"
         >
           Get Started
         </Link>
@@ -225,17 +187,11 @@ export default function Navbar() {
           className="md:hidden"
           onClick={() => setIsMobileMenuOpen((prev) => !prev)}
           aria-label={
-            isMobileMenuOpen
-              ? "Close navigation menu"
-              : "Open navigation menu"
+            isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"
           }
           aria-expanded={isMobileMenuOpen}
         >
-          {isMobileMenuOpen ? (
-            <X className="h-5 w-5" />
-          ) : (
-            <Menu className="h-5 w-5" />
-          )}
+          {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </Button>
       </nav>
 
@@ -244,8 +200,7 @@ export default function Navbar() {
         <div className="border-t border-[#DADEE7] bg-white md:hidden">
           <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
             <div className="space-y-1">
-              {/* Main Links */}
-              {navItems.map((item) => (
+              {primaryNavItems.map((item) => (
                 <Link
                   key={item.label}
                   href={item.href}
@@ -256,97 +211,67 @@ export default function Navbar() {
                 </Link>
               ))}
 
-              {/* Mobile Products */}
-             {/* Mobile Products */}
-<div className="border-t border-[#DADEE7] pt-2">
-  <button
-    type="button"
-    onClick={() =>
-      setIsMobileProductsOpen((prev) => !prev)
-    }
-    className="flex w-full items-center justify-between rounded-lg px-3 py-3 text-sm font-medium text-[#676F7E] transition-colors hover:bg-[#F8FAFC] hover:text-[#072069]"
-    aria-expanded={isMobileProductsOpen}
-  >
-    <span>Products</span>
+              {/* Mobile Others Dropdown */}
+              <div className="border-t border-[#DADEE7] pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsMobileOthersOpen((prev) => !prev)}
+                  className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-[#676F7E] transition-colors hover:bg-[#F8FAFC] hover:text-[#072069]"
+                  aria-expanded={isMobileOthersOpen}
+                >
+                  <span>Others</span>
+                  <ChevronDown
+                    className={`h-4 w-4 transition-transform duration-200 ${
+                      isMobileOthersOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
 
-    <ChevronDown
-      className={`h-4 w-4 transition-transform duration-200 ${
-        isMobileProductsOpen ? "rotate-180" : ""
-      }`}
-    />
-  </button>
+                {isMobileOthersOpen && (
+                  <div className="mt-1 space-y-1 rounded-xl bg-[#F8FAFC] p-2">
+                    {othersItems.map((item) => {
+                      const Icon = item.icon;
+                      return item.external ? (
+                        <a
+                          key={item.label}
+                          href={item.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={closeMobileMenu}
+                          className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-[#0F1729] hover:bg-white hover:text-[#072069]"
+                        >
+                          <Icon className="h-4 w-4 text-[#072069]" />
+                          <span>{item.label}</span>
+                        </a>
+                      ) : (
+                        <Link
+                          key={item.label}
+                          href={item.href}
+                          onClick={closeMobileMenu}
+                          className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-[#0F1729] hover:bg-white hover:text-[#072069]"
+                        >
+                          <Icon className="h-4 w-4 text-[#072069]" />
+                          <span>{item.label}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
 
-  {/* Mobile Product List */}
-  {isMobileProductsOpen && (
-    <div className="mt-1 space-y-1 rounded-xl bg-gradient-to-b from-[#F8FAFC] to-[#EBF0FA]/60 p-2">
-      {/* Header */}
-      <div className="px-2 py-2">
-        <p className="text-xs font-semibold uppercase tracking-wide text-[#072069]">
-          Our Products
-        </p>
-
-        <p className="mt-0.5 text-xs text-[#676F7E]">
-          Explore our software solutions
-        </p>
-      </div>
-
-      {productList.map((product) => {
-        const Icon = iconMap[product.category as keyof typeof iconMap] || Building2;
-
-        return (
-          <Link
-            key={product.id}
-            href={`/products/${product.slug}`}
-            onClick={closeMobileMenu}
-            className="group flex items-start gap-3 rounded-lg border border-transparent bg-white px-3 py-3 transition-all duration-200 hover:border-[#DADEE7] hover:bg-white hover:shadow-sm"
-          >
-            {/* Icon */}
-            <div
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-all duration-200 group-hover:text-white"
-              style={{ backgroundColor: `${product.color}15`, color: product.color }}
-            >
-              <Icon className="h-4 w-4 transition-colors duration-200" />
-            </div>
-
-            {/* Product Info */}
-            <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold text-[#0F1729] transition-colors duration-200" style={{ color: product.color }}>
-                {product.name}
-              </p>
-
-              <p className="mt-0.5 text-xs leading-5 text-[#676F7E]">
-                {product.description}
-              </p>
-            </div>
-
-            {/* Arrow */}
-            <span className="mt-1 text-sm text-[#DADEE7] transition-all duration-200 group-hover:translate-x-1 group-hover:text-[#0EA5E9]">
-              →
-            </span>
-          </Link>
-        );
-      })}
-
-      {/* View All Products */}
-      <Link
-        href="/products"
-        onClick={closeMobileMenu}
-        className="group flex items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm font-semibold text-[#0EA5E9] transition-colors hover:bg-white hover:text-[#072069]"
-      >
-        <span>View all products</span>
-
-        <span className="transition-transform duration-200 group-hover:translate-x-1">
-          →
-        </span>
-      </Link>
-    </div>
-  )}
-</div>
+              {/* Mobile Contact Link */}
+              <Link
+                href="/contact"
+                onClick={closeMobileMenu}
+                className="block rounded-md px-3 py-2.5 text-sm font-medium text-[#676F7E] transition-colors hover:bg-[#F8FAFC] hover:text-[#072069]"
+              >
+                Contact Us
+              </Link>
 
               {/* Mobile CTA */}
               <div className="border-t border-[#DADEE7] pt-4">
                 <Link
-                  href="#contact"
+                  href="/contact"
                   onClick={closeMobileMenu}
                   className="flex w-full items-center justify-center rounded-md bg-[#0EA5E9] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#072069]"
                 >
