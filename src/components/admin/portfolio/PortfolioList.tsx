@@ -307,20 +307,18 @@ export default function PortfolioList() {
                               </Button>
                             }
                           />
-                          <DropdownMenuContent align="end" className="w-52 bg-white border border-[#DADEE7] shadow-xl rounded-xl p-1.5 z-50">
+                          <DropdownMenuContent align="end" className="w-48 bg-white">
                             <DropdownMenuItem
-                              className="cursor-pointer font-medium text-[#0F1729] hover:bg-[#F8FAFC] focus:bg-[#F8FAFC] focus:text-[#072069]"
                               render={
-                                <Link href={`/admin/portfolio/${project.id}/edit`} className="flex items-center w-full">
+                                <Link href={`/admin/portfolio/${project.id}/edit`}>
                                   <Pencil className="size-4 mr-2 text-[#0EA5E9]" />
                                   Edit Project
                                 </Link>
                               }
                             />
                             <DropdownMenuItem
-                              className="cursor-pointer font-medium text-[#0F1729] hover:bg-[#F8FAFC] focus:bg-[#F8FAFC] focus:text-[#072069]"
                               render={
-                                <Link href={`/portfolio/${project.slug}`} target="_blank" className="flex items-center w-full">
+                                <Link href={`/portfolio/${project.slug}`} target="_blank">
                                   <ExternalLink className="size-4 mr-2 text-[#072069]" />
                                   View Public Page
                                 </Link>
@@ -328,7 +326,6 @@ export default function PortfolioList() {
                             />
                             <DropdownMenuItem
                               onClick={() => handleTogglePublish(project.id)}
-                              className="cursor-pointer font-medium text-[#0F1729] hover:bg-[#F8FAFC] focus:bg-[#F8FAFC]"
                             >
                               {project.isPublished ? (
                                 <>
@@ -344,7 +341,6 @@ export default function PortfolioList() {
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleToggleFeatured(project.id)}
-                              className="cursor-pointer font-medium text-[#0F1729] hover:bg-[#F8FAFC] focus:bg-[#F8FAFC]"
                             >
                               <Star className="size-4 mr-2 text-amber-500" />
                               {project.isFeatured ? "Unfeature" : "Make Featured"}
@@ -352,7 +348,6 @@ export default function PortfolioList() {
                             <DropdownMenuItem
                               onClick={() => setDeleteTarget(project)}
                               variant="destructive"
-                              className="cursor-pointer font-medium text-red-600 hover:bg-red-50 focus:bg-red-50 focus:text-red-700"
                             >
                               <Trash2 className="size-4 mr-2 text-red-600" />
                               Delete
